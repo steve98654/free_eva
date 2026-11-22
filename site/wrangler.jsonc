@@ -1,0 +1,11 @@
+// Cloudflare Workers deploy config for evaxie.us (static Astro site).
+// Workers Builds settings: root directory `site`, build command `npm run build`,
+// deploy command `npx wrangler deploy`.
+{
+  "name": "free-eva",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}
