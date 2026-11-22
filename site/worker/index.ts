@@ -52,6 +52,7 @@ const AFFILIATIONS: Record<string, string> = {
   faculty_staff: 'Princeton faculty or staff',
   alum: 'Princeton alum',
   community: 'Community member',
+  unaffiliated: 'Unaffiliated',
 };
 const HEARD_FROM: Record<string, string> = {
   qr: 'QR code (shirt, poster, sticker)',

@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS signatures_v2 (
   city            TEXT,
   state           TEXT,                        -- optional, 2-letter US state or other region
   zip             TEXT,                        -- optional
-  affiliation     TEXT,                        -- optional: student | faculty_staff | alum | community
+  affiliation     TEXT,                        -- optional: student | faculty_staff | alum | community | unaffiliated
   comment         TEXT,                        -- optional "why I'm signing", never shown automatically
   heard_from      TEXT,                        -- optional: qr | social | rally | friend | news | email | other
   is_public       INTEGER NOT NULL DEFAULT 0,
