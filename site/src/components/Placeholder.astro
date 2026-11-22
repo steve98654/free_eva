@@ -1,0 +1,29 @@
+---
+// Marks content the campaign still needs to confirm. Search the repo for
+// <Placeholder to find every gap before launch.
+interface Props { label: string; inline?: boolean }
+const { label, inline = false } = Astro.props;
+const Tag = inline ? 'span' : 'div';
+---
+<Tag class:list={['ph', { inline }]} title="Placeholder: replace before launch">
+  <span class="ph-tag">TO CONFIRM</span> {label}
+</Tag>
+
+<style>
+  .ph {
+    border: 2px dashed var(--orange);
+    color: var(--orange);
+    background: color-mix(in srgb, var(--orange) 8%, transparent);
+    padding: 0.6rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    margin: 0.5rem 0;
+  }
+  .ph.inline { display: inline; padding: 0.05rem 0.35rem; margin: 0; }
+  .ph-tag {
+    font-family: var(--font-stencil);
+    letter-spacing: 0.08em;
+    font-size: 0.75em;
+    margin-right: 0.3em;
+  }
+</style>

@@ -1,0 +1,90 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+
+const pillars = [
+  {
+    n: '01',
+    href: '/free-eva/',
+    title: 'Free Eva',
+    zh: '釋放謝翌',
+    body: 'Eva Xie is a Princeton PhD student. She went to an academic conference and was detained by ICE on her way home. She belongs back in her lab and her classroom, now.',
+    cta: 'Her story and how to help',
+  },
+  {
+    n: '02',
+    href: '/mutual-respect/',
+    title: 'Mutual Respect',
+    zh: '相互尊重',
+    body: 'We support lawful immigration enforcement. We ask that it be done with judgment, and that foreign guests here be treated the way we want Americans treated abroad.',
+    cta: 'What better enforcement looks like',
+  },
+  {
+    n: '03',
+    href: '/us-china/',
+    title: 'US–China',
+    zh: '中美友誼',
+    body: 'Two hundred and forty years of trade, study, science and friendship, with hard chapters too. Competition does not have to crowd out collaboration.',
+    cta: 'The shared history and what we can do',
+  },
+];
+---
+<Base>
+  <section class="page-hero home-hero">
+    <div class="wrap">
+      <p class="zh-title" lang="zh-Hant">釋放謝翌 · {site.respectZh}</p>
+      <h1>FREE EVA</h1>
+      <p class="lede">
+        A student is not a threat. Eva Xie, a PhD student at Princeton, was detained by ICE when she came home
+        from a conference. We are asking for her release, for enforcement that respects the people it touches,
+        and for a relationship between the United States and China built on mutual respect.
+      </p>
+      <div class="btn-row">
+        <a class="btn" href="/free-eva/#act">Help free Eva</a>
+        <a class="btn ghost" href="/mutual-respect/">Read our position</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">Three things we stand for</p>
+      <div class="grid grid-3">
+        {pillars.map((p) => (
+          <a class="card accent pillar" href={p.href}>
+            <span class="pillar-n">{p.n}</span>
+            <h3>{p.title} <span class="zh orange pillar-zh" lang="zh-Hant">{p.zh}</span></h3>
+            <p class="muted">{p.body}</p>
+            <p class="pillar-cta">{p.cta} →</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="narrow">
+      <p class="eyebrow">Where we stand</p>
+      <h2>Firm, lawful, respectful.</h2>
+      <p>
+        This campaign is not against the people who enforce our immigration laws. It is for doing that job well.
+        We think detaining a graduate student who left to present her research, and came back to continue it,
+        is the wrong call. We think the way it was handled falls short of the respect any guest of this country
+        is owed. And we think the answer is the same rule Americans hope for when they travel: treat others the
+        way you want to be treated.
+      </p>
+      <blockquote>
+        Mutual respect is the basis for collaboration. <span class="zh orange" lang="zh-Hant">{site.respectZh}</span>
+      </blockquote>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .home-hero h1 { font-size: clamp(3.6rem, 13vw, 8.5rem); margin-bottom: 0.2em; }
+  .pillar { text-decoration: none; color: var(--white); display: flex; flex-direction: column; transition: transform 0.15s, border-color 0.15s; }
+  .pillar:hover { transform: translateY(-3px); border-color: var(--orange); color: var(--white); }
+  .pillar-n { font-family: var(--font-stencil); color: var(--orange); font-size: 2.2rem; line-height: 1; margin-bottom: 0.6rem; }
+  .pillar-zh { font-size: 1rem; margin-left: 0.4rem; letter-spacing: 0.1em; }
+  .pillar-cta { margin-top: auto; color: var(--orange-soft); font-weight: 600; }
+</style>

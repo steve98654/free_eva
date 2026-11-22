@@ -1,0 +1,111 @@
+---
+import Base from '../layouts/Base.astro';
+import Placeholder from '../components/Placeholder.astro';
+import { site } from '../data/site';
+const { links } = site;
+---
+<Base title="Free Eva" description="Eva Xie, a Princeton PhD student, was detained by ICE on returning from a conference. Help bring her home.">
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="zh-title" lang="zh-Hant">釋放謝翌</p>
+      <h1>Bring Eva home.</h1>
+      <p class="lede">
+        Eva Xie is a PhD student at Princeton University. She traveled to an academic conference, and when she
+        returned to the United States she was detained by U.S. Immigration and Customs Enforcement.
+        Every day she spends in detention is a day away from her research, her colleagues and her life.
+      </p>
+      <div class="btn-row">
+        <a class="btn" href="#act">What you can do</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="narrow">
+      <p class="eyebrow">What we know</p>
+      <h2>Her story</h2>
+      <p>
+        Only confirmed details belong here. The campaign will update this page as facts are verified and as
+        Eva and her family are comfortable sharing them.
+      </p>
+      <dl class="facts">
+        <dt>Who</dt><dd>Eva Xie (謝翌), PhD student, Princeton University</dd>
+        <dt>Field</dt><dd><Placeholder inline label="department / area of research" /></dd>
+        <dt>Conference</dt><dd><Placeholder inline label="name, location and dates of the conference" /></dd>
+        <dt>Detained</dt><dd>By ICE on returning to the U.S. <Placeholder inline label="date and port of entry" /></dd>
+        <dt>Where now</dt><dd><Placeholder inline label="detention facility, if public" /></dd>
+        <dt>Status</dt><dd><Placeholder inline label="visa status and current legal proceedings" /></dd>
+      </dl>
+      <Placeholder label="A short statement from Eva's family, advisor or attorney." />
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">What we are asking</p>
+      <h2>Our asks</h2>
+      <div class="grid grid-3">
+        <div class="card accent">
+          <h3>Release her now</h3>
+          <p class="muted">Release Eva from detention while any questions about her case are resolved. A graduate student with a home, a university and a community is not a flight risk or a danger.</p>
+        </div>
+        <div class="card accent">
+          <h3>Due process</h3>
+          <p class="muted">Full, prompt access to her attorney, her family and her consulate, and a clear written explanation of why she was detained.</p>
+        </div>
+        <div class="card accent">
+          <h3>Let her finish</h3>
+          <p class="muted">Let Eva return to Princeton and complete the work she came here to do, under whatever lawful process applies.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="act">
+    <div class="narrow">
+      <p class="eyebrow">Take action</p>
+      <h2>How you can help today</h2>
+      <ol class="actions">
+        <li>
+          <h3>Call your members of Congress</h3>
+          <p>The U.S. Capitol switchboard at <a href="tel:+12022243121">(202) 224-3121</a> connects you to any senator or representative. Ask them to contact ICE on Eva's behalf and request her release. Be brief and polite: who you are, where you live, what you ask.</p>
+          <Placeholder label="Congressional offices covering Princeton, NJ to prioritize, plus a short call script." />
+        </li>
+        <li>
+          <h3>Sign the petition</h3>
+          {links.petition
+            ? <p><a href={links.petition}>Sign and share the petition.</a></p>
+            : <Placeholder label="Petition link (set links.petition in src/data/site.ts)" />}
+        </li>
+        <li>
+          <h3>Support her legal defense</h3>
+          {links.legalFund
+            ? <p><a href={links.legalFund}>Contribute to Eva's legal fund.</a></p>
+            : <Placeholder label="Legal fund link (set links.legalFund)" />}
+        </li>
+        <li>
+          <h3>Show up</h3>
+          <p>Come to a rally, wear the shirt, and keep it peaceful and respectful. Our message is stronger when the way we say it matches what we are asking for.</p>
+          {links.rally
+            ? <p><a href={links.rally}>Event details.</a></p>
+            : <Placeholder label="Rally date, time and place (set links.rally)" />}
+        </li>
+        <li>
+          <h3>Share her story</h3>
+          <p>Share <strong>{site.domain}</strong> with your friends, your department and your local paper. Use #FreeEva and <span class="zh" lang="zh-Hant">#釋放謝翌</span>.</p>
+        </li>
+        <li>
+          <h3>Get in touch</h3>
+          <p>Want to volunteer, organize on your campus, or talk to the press? Email us at <a href={`mailto:${links.email}`}>{links.email}</a>.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .facts { display: grid; grid-template-columns: max-content 1fr; gap: 0.6rem 1.25rem; margin: 1.5rem 0; }
+  .facts dt { font-family: var(--font-display); font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--orange); }
+  .facts dd { margin: 0; }
+  @media (max-width: 520px) { .facts { grid-template-columns: 1fr; gap: 0.15rem; } .facts dd { margin-bottom: 0.7rem; } }
+</style>

@@ -1,0 +1,33 @@
+---
+import { site } from '../data/site';
+// Swap the logo by setting site.logo.src in src/data/site.ts.
+const { logo } = site;
+---
+<a href="/" class="logo" aria-label="Free Eva home">
+  {logo.src ? (
+    <img src={logo.src} alt={logo.alt} height="44" />
+  ) : (
+    <span class="logo-ph" title="Placeholder logo: set site.logo.src to swap">
+      <span class="ring" aria-hidden="true"></span>
+      <span class="words">
+        <span class="en">FREE EVA</span>
+        <span class="zh">{site.nameZh}</span>
+      </span>
+    </span>
+  )}
+</a>
+
+<style>
+  .logo { display: inline-flex; align-items: center; text-decoration: none; color: var(--white); }
+  .logo img { display: block; height: 44px; width: auto; }
+  .logo-ph { display: inline-flex; align-items: center; gap: 0.6rem; }
+  .ring {
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 5px solid var(--orange);
+    border-right-color: transparent;
+    transform: rotate(-45deg);
+  }
+  .words { display: flex; flex-direction: column; line-height: 1; }
+  .en { font-family: var(--font-stencil); font-size: 1.35rem; letter-spacing: 0.06em; }
+  .zh { font-family: var(--font-zh); font-size: 0.8rem; color: var(--orange); letter-spacing: 0.2em; margin-top: 3px; }
+</style>
