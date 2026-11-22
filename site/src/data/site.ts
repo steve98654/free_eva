@@ -35,4 +35,5 @@ export const tabs = [
   { href: '/mutual-respect/', label: 'Mutual Respect', zh: '相互尊重' },
   { href: '/us-china/', label: 'US–China', zh: '中美友誼' },
   { href: '/shop/', label: 'Shop', zh: '義賣' },
+  { href: '/contact/', label: 'Contact', zh: '聯絡' },
 ];
