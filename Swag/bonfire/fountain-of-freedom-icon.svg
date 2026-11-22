@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 112" width="200" height="112" role="img" aria-label="Fountain of Freedom">
+<g fill="#fff">
+  <!-- bronze spires: tall, eroded, organic -->
+  <path fill-rule="evenodd" d="M66 92
+    C68 80 70 70 74 62 C76 56 74 50 77 44 C79 50 80 56 83 60
+    C85 50 86 40 89 32 C91 26 92 20 95 10 C97 18 98 26 101 32
+    C103 38 103 44 106 50 C108 42 110 34 114 26 C116 34 116 42 118 50
+    C120 56 123 60 126 64 C128 60 129 56 131 52 C133 60 133 68 134 76
+    C135 82 136 88 137 92 Z
+    M95 88 C94 76 95 62 97 50 C99 62 99 76 98 88 Z
+    M111 88 C110 80 111 70 113 62 C115 70 115 80 114 88 Z
+    M82 88 C82 82 83 76 85 72 C86 78 86 84 85 88 Z
+    M124 88 C124 84 125 80 126 77 C127 81 127 85 126.5 88 Z"/>
+  <!-- pool rim and water line -->
+  <rect x="8" y="96" width="184" height="8" rx="2"/>
+  <path d="M14 93 Q24 89 34 93 T54 93 T74 93 T94 93 T114 93 T134 93 T154 93 T174 93 T190 93" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>
+</g>
+<g fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round">
+  <!-- jets arcing in toward the sculpture -->
+  <path d="M18 92 Q28 40 62 58"/>
+  <path d="M38 92 Q44 58 66 66" stroke-width="2.4"/>
+  <path d="M182 92 Q172 40 138 58"/>
+  <path d="M162 92 Q156 58 134 66" stroke-width="2.4"/>
+</g>
+<g fill="#fff"><circle cx="66" cy="54" r="2"/><circle cx="70" cy="60" r="1.5"/><circle cx="134" cy="54" r="2"/><circle cx="130" cy="60" r="1.5"/></g>
+</svg>

@@ -7,10 +7,11 @@ Upload files for the rally shirt, made to Bonfire's artwork guidance (PNG, trans
 
 | File | Size | Prints at |
 | --- | --- | --- |
-| `bonfire/bonfire-front.png` | 3312 x 1712 px | about 11 x 5.7 in, chest |
+| `bonfire/bonfire-front.png` | 3312 x 2912 px | about 11 x 9.7 in, chest |
 | `bonfire/bonfire-back.png` | 3300 x 3312 px | about 11 x 11 in, upper back |
 
 - Shirt color: black. Inks: orange #E77500 and white.
+- Front has a Fountain of Freedom icon (Scudder Plaza, where the rally is held) above 釋放謝翌; the icon alone is `bonfire/fountain-of-freedom-icon.svg`.
 - The Princeton shield and fountain icons from the rally shirt are left off, because the university's
   marks can't be sold on merchandise without a license.
 - `bonfire/shirt-mockup.png` is the front and back preview used on the site's Shop page.
