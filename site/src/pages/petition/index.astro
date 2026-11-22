@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { site } from '../../data/site';
+const states = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','District of Columbia','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Puerto Rico','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming','Guam','U.S. Virgin Islands','American Samoa','Northern Mariana Islands'];
 ---
 <Base title="Petition" description="Sign the petition to the White House, the courts and Congress: fair treatment for Eva Xie, respectful reform of how ICE interacts with the public, and mutual respect between the United States and China.">
   <section class="page-hero">
@@ -118,20 +119,69 @@ import { site } from '../../data/site';
           <input id="f-name" name="name" type="text" autocomplete="name" maxlength="80" required />
         </div>
         <div class="field">
-          <label for="f-email">Email <span class="req">required</span></label>
-          <input id="f-email" name="email" type="email" autocomplete="email" maxlength="254" required />
-          <p class="hint">We send a confirmation here. Your email is never shown publicly or shared.</p>
+          <label for="f-email">Email <span class="opt">optional</span></label>
+          <input id="f-email" name="email" type="email" autocomplete="email" maxlength="254" />
+          <p class="hint">Add it to get a confirmation email and a link to remove your signature later. Your email is never shown publicly or shared.</p>
         </div>
+
+        <p class="opt-head">Everything below is optional, but it helps us show lawmakers and the university who is behind this.</p>
+        <div class="field-row">
+          <div class="field">
+            <label for="f-city">City or town</label>
+            <input id="f-city" name="city" type="text" autocomplete="address-level2" maxlength="80" placeholder="e.g. Princeton" />
+          </div>
+          <div class="field">
+            <label for="f-state">State</label>
+            <select id="f-state" name="state" autocomplete="address-level1">
+              <option value="">Choose…</option>
+              {states.map((st) => <option value={st}>{st}</option>)}
+              <option value="Outside the U.S.">Outside the U.S.</option>
+            </select>
+          </div>
+          <div class="field zip">
+            <label for="f-zip">ZIP code</label>
+            <input id="f-zip" name="zip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="10" />
+          </div>
+        </div>
+        <p class="hint">State and ZIP let us tell each member of Congress how many of their constituents signed. Your ZIP code is never shown publicly.</p>
+
+        <div class="field-row two">
+          <div class="field">
+            <label for="f-aff">Princeton connection</label>
+            <select id="f-aff" name="affiliation">
+              <option value="">Choose…</option>
+              <option value="student">Princeton student</option>
+              <option value="faculty_staff">Princeton faculty or staff</option>
+              <option value="alum">Princeton alum</option>
+              <option value="community">Community member</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-heard">How did you hear about this?</label>
+            <select id="f-heard" name="heardFrom">
+              <option value="">Choose…</option>
+              <option value="qr">QR code (shirt, poster, sticker)</option>
+              <option value="social">Social media</option>
+              <option value="rally">Rally or event</option>
+              <option value="friend">Friend or colleague</option>
+              <option value="news">News story</option>
+              <option value="email">Email or group chat</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+
         <div class="field">
-          <label for="f-city">City or school <span class="opt">optional</span></label>
-          <input id="f-city" name="city" type="text" autocomplete="address-level2" maxlength="80" placeholder="e.g. Princeton, NJ" />
+          <label for="f-comment">Why I'm signing</label>
+          <textarea id="f-comment" name="comment" rows="3" maxlength="500"></textarea>
+          <p class="hint">Up to 500 characters. Not posted automatically. If you sign publicly, we may quote it with your name.</p>
         </div>
 
         <fieldset class="field privacy">
           <legend>Show my signature</legend>
           <label class="choice">
             <input type="radio" name="public" value="true" checked />
-            <span><strong>Publicly.</strong> Show my name (and city, if given) on the list of signers below.</span>
+            <span><strong>Publicly.</strong> Show my name (and city and state, if given) on the list of signers below.</span>
           </label>
           <label class="choice">
             <input type="radio" name="public" value="false" />
@@ -145,7 +195,7 @@ import { site } from '../../data/site';
         </label>
         <label class="choice check">
           <input type="checkbox" name="updates" />
-          <span>Email me occasional campaign updates. <span class="muted">(optional)</span></span>
+          <span>Email me occasional campaign updates. <span class="muted">(needs an email above)</span></span>
         </label>
 
         <!-- Spam trap: hidden from people, filled in by bots. -->
@@ -158,8 +208,8 @@ import { site } from '../../data/site';
         <p id="form-error" class="form-error" role="alert" hidden></p>
         <button class="btn" type="submit" id="sign-btn">Sign the petition</button>
         <p class="hint">
-          We record your name, email and the time you signed. You can remove your signature at any time using
-          the link in your confirmation email.
+          We record your name, the time you signed and anything else you fill in. If you give an email, you can
+          remove your signature at any time with the link in your confirmation email, or write to us.
         </p>
       </form>
 
@@ -190,7 +240,7 @@ import { site } from '../../data/site';
 </Base>
 
 <script>
-  type Signer = { name: string; city: string | null; signedAt: string };
+  type Signer = { name: string; city: string | null; state?: string | null; signedAt: string };
   type PetitionData = { ready: boolean; count: number; signers: Signer[]; nextCursor: number | null; turnstileSiteKey: string | null };
 
   const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -217,10 +267,11 @@ import { site } from '../../data/site';
       name.className = 'sn';
       name.textContent = s.name; // textContent: never render signer input as HTML
       li.append(name);
-      if (s.city) {
+      const place = [s.city, s.state].filter(Boolean).join(', ');
+      if (place) {
         const city = document.createElement('span');
         city.className = 'sc';
-        city.textContent = s.city;
+        city.textContent = place;
         li.append(city);
       }
       const t = document.createElement('time');
@@ -280,13 +331,18 @@ import { site } from '../../data/site';
     const name = String(fd.get('name') || '').trim();
     const email = String(fd.get('email') || '').trim();
     if (name.length < 2) return showError('Please enter your name.', 'name');
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return showError('Please enter a valid email address.', 'email');
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return showError('Please enter a valid email address.', 'email');
     if (!fd.get('agree')) return showError('Please tick the box to confirm you agree with the petition.', 'agree');
 
     const payload = {
       name,
       email,
       city: String(fd.get('city') || '').trim(),
+      state: String(fd.get('state') || ''),
+      zip: String(fd.get('zip') || '').trim(),
+      affiliation: String(fd.get('affiliation') || ''),
+      heardFrom: String(fd.get('heardFrom') || ''),
+      comment: String(fd.get('comment') || '').trim(),
       public: fd.get('public') === 'true',
       agree: true,
       updates: Boolean(fd.get('updates')),
@@ -316,7 +372,7 @@ import { site } from '../../data/site';
       $('done-time').textContent = `Signed ${fmtTime(data.signedAt)}. ${payload.public ? 'Your name is on the public list below.' : 'Your signature is private: it is counted but not shown.'}`;
       $('done-email').textContent = data.emailQueued ? `A confirmation email is on its way to ${email}.` : '';
       if (typeof data.count === 'number') setCount(data.count);
-      if (payload.public) addSigners([{ name, city: payload.city || null, signedAt: data.signedAt }], true);
+      if (payload.public) addSigners([{ name, city: payload.city || null, state: payload.state || null, signedAt: data.signedAt }], true);
       done.focus();
     } catch {
       showError('We could not reach the server. Check your connection and try again.');
@@ -358,11 +414,20 @@ import { site } from '../../data/site';
   .field { display: grid; gap: 0.35rem; margin: 0; border: 0; padding: 0; }
   .field > label, .field legend { font-weight: 600; }
   .req, .opt { font-weight: 400; font-size: 0.8rem; color: var(--muted); margin-left: 0.3rem; }
-  input[type='text'], input[type='email'] {
-    font: inherit; color: var(--white); background: var(--black); border: 1px solid var(--line);
+  .opt-head { margin: 0.4rem 0 -0.3rem; padding-top: 1rem; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.95rem; }
+  .field-row { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+  @media (min-width: 640px) {
+    .field-row { grid-template-columns: 1.3fr 1.3fr 0.8fr; }
+    .field-row.two { grid-template-columns: 1fr 1fr; }
+  }
+  .field-row + .hint { margin-top: -0.6rem; }
+  textarea { resize: vertical; min-height: 5rem; }
+  select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%); background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%; background-size: 5px 5px; background-repeat: no-repeat; padding-right: 2rem !important; }
+  input[type='text'], input[type='email'], select, textarea {
+    font: inherit; color: var(--white); background-color: var(--black); border: 1px solid var(--line);
     border-radius: 4px; padding: 0.7rem 0.8rem; width: 100%;
   }
-  input[type='text']:focus, input[type='email']:focus { outline: 2px solid var(--orange); outline-offset: 1px; border-color: var(--orange); }
+  input[type='text']:focus, input[type='email']:focus, select:focus, textarea:focus { outline: 2px solid var(--orange); outline-offset: 1px; border-color: var(--orange); }
   .hint { font-size: 0.88rem; color: var(--muted); margin: 0; }
   .privacy { gap: 0.55rem; }
   .privacy legend { margin-bottom: 0.4rem; }

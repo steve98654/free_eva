@@ -4,6 +4,7 @@
 //   GET  /api/petition          -> signature count + public signer list (names/cities only)
 //   POST /api/petition/sign     -> record a signature, send a confirmation email
 //   POST /api/petition/remove   -> delete a signature using the token from the email
+//   GET  /api/petition/export   -> all signers for the Google Sheet sync (needs EXPORT_TOKEN)
 //
 // Bindings and settings (see wrangler.jsonc and site/PETITION.md):
 //   DB                    D1 database (required for signing)
@@ -14,6 +15,7 @@
 //   TURNSTILE_SECRET_KEY  secret  (wrangler secret / dashboard "Secret")
 //   RESEND_API_KEY        secret  (if unset, signatures still save but no email is sent)
 //   IP_SALT               secret  (optional; salts the IP hash used for rate limiting)
+//   EXPORT_TOKEN          secret  (shared with the Google Sheet script; export is off if unset)
 
 interface Env {
   ASSETS: { fetch: (req: Request) => Promise<Response> };
@@ -25,6 +27,7 @@ interface Env {
   TURNSTILE_SECRET_KEY?: string;
   RESEND_API_KEY?: string;
   IP_SALT?: string;
+  EXPORT_TOKEN?: string;
 }
 
 // Minimal D1 types so this file needs no extra dev dependency.
@@ -35,11 +38,71 @@ interface D1PreparedStatement {
   all<T = unknown>(): Promise<D1Result<T>>;
   run(): Promise<D1Result>;
 }
-interface D1Database { prepare(query: string): D1PreparedStatement }
+interface D1Database {
+  prepare(query: string): D1PreparedStatement;
+  batch(statements: D1PreparedStatement[]): Promise<D1Result[]>;
+}
 interface ExecutionContext { waitUntil(p: Promise<unknown>): void }
 
 const PAGE_SIZE = 50;
 const MAX_PER_IP_PER_HOUR = 5;
+
+const AFFILIATIONS: Record<string, string> = {
+  student: 'Princeton student',
+  faculty_staff: 'Princeton faculty or staff',
+  alum: 'Princeton alum',
+  community: 'Community member',
+};
+const HEARD_FROM: Record<string, string> = {
+  qr: 'QR code (shirt, poster, sticker)',
+  social: 'Social media',
+  rally: 'Rally or event',
+  friend: 'Friend or colleague',
+  news: 'News story',
+  email: 'Email or group chat',
+  other: 'Other',
+};
+
+// ---------- schema ----------
+// The Worker keeps the D1 schema current itself, so no manual SQL is needed after deploys.
+// Mirrors migrations/0001 and 0002.
+
+const COLUMNS = `
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  email TEXT UNIQUE,
+  city TEXT, state TEXT, zip TEXT, affiliation TEXT, comment TEXT, heard_from TEXT,
+  is_public INTEGER NOT NULL DEFAULT 0,
+  wants_updates INTEGER NOT NULL DEFAULT 0,
+  signed_at TEXT NOT NULL,
+  manage_token TEXT NOT NULL UNIQUE,
+  ip_hash TEXT, email_sent_at TEXT, email_error TEXT`;
+const OLD_COLS = 'id, name, email, city, is_public, wants_updates, signed_at, manage_token, ip_hash, email_sent_at, email_error';
+let schemaReady = false;
+
+async function ensureSchema(db: D1Database): Promise<void> {
+  if (schemaReady) return;
+  const info = await db.prepare('PRAGMA table_info(signatures)').all<{ name: string; notnull: number }>();
+  const cols = info.results;
+  const indexes = [
+    db.prepare('CREATE INDEX IF NOT EXISTS idx_signatures_public ON signatures (is_public, signed_at DESC)'),
+    db.prepare('CREATE INDEX IF NOT EXISTS idx_signatures_ip ON signatures (ip_hash, signed_at)'),
+  ];
+  if (cols.length === 0) {
+    await db.batch([db.prepare(`CREATE TABLE IF NOT EXISTS signatures (${COLUMNS})`), ...indexes]);
+  } else if (!cols.some((c) => c.name === 'affiliation')) {
+    // 0002: email becomes optional (needs a table rebuild in SQLite) and new optional fields.
+    await db.batch([
+      db.prepare('DROP TABLE IF EXISTS signatures_v2'),
+      db.prepare(`CREATE TABLE signatures_v2 (${COLUMNS})`),
+      db.prepare(`INSERT INTO signatures_v2 (${OLD_COLS}) SELECT ${OLD_COLS} FROM signatures`),
+      db.prepare('DROP TABLE signatures'),
+      db.prepare('ALTER TABLE signatures_v2 RENAME TO signatures'),
+      ...indexes,
+    ]);
+  }
+  schemaReady = true;
+}
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
@@ -47,6 +110,8 @@ export default {
     if (!url.pathname.startsWith('/api/')) return env.ASSETS.fetch(request);
 
     try {
+      if (env.DB) await ensureSchema(env.DB);
+      if (url.pathname === '/api/petition/export' && request.method === 'GET') return await exportAll(request, env);
       if (url.pathname === '/api/petition' && request.method === 'GET') return await getPetition(url, env);
       if (url.pathname === '/api/petition/sign' && request.method === 'POST') return await sign(request, env, ctx);
       if (url.pathname === '/api/petition/remove' && request.method === 'POST') return await remove(request, env);
@@ -67,12 +132,12 @@ async function getPetition(url: URL, env: Env): Promise<Response> {
   const cursor = Number(url.searchParams.get('cursor')) || 0;
   const countRow = await env.DB.prepare('SELECT COUNT(*) AS n FROM signatures').first<{ n: number }>();
   const rows = await env.DB.prepare(
-    `SELECT id, name, city, signed_at FROM signatures
+    `SELECT id, name, city, state, signed_at FROM signatures
      WHERE is_public = 1 ${cursor ? 'AND id < ?1' : ''}
      ORDER BY id DESC LIMIT ${PAGE_SIZE + 1}`,
   )
     .bind(...(cursor ? [cursor] : []))
-    .all<{ id: number; name: string; city: string | null; signed_at: string }>();
+    .all<{ id: number; name: string; city: string | null; state: string | null; signed_at: string }>();
 
   const list = rows.results.slice(0, PAGE_SIZE);
   return json(
@@ -81,7 +146,7 @@ async function getPetition(url: URL, env: Env): Promise<Response> {
       ready: true,
       count: countRow?.n ?? 0,
       // Only public signers, and only name, city and time. Never email.
-      signers: list.map((r) => ({ name: r.name, city: r.city, signedAt: r.signed_at })),
+      signers: list.map((r) => ({ name: r.name, city: r.city, state: r.state, signedAt: r.signed_at })),
       nextCursor: rows.results.length > PAGE_SIZE ? list[list.length - 1].id : null,
     },
     200,
@@ -103,11 +168,16 @@ async function sign(request: Request, env: Env, ctx: ExecutionContext): Promise<
   const name = clean(body.name, 80);
   const email = clean(body.email, 254).toLowerCase();
   const city = clean(body.city, 80) || null;
+  const state = clean(body.state, 40) || null;
+  const zip = clean(body.zip, 12) || null;
+  const affiliation = AFFILIATIONS[clean(body.affiliation, 20)] ? clean(body.affiliation, 20) : null;
+  const heardFrom = HEARD_FROM[clean(body.heardFrom, 20)] ? clean(body.heardFrom, 20) : null;
+  const comment = cleanMultiline(body.comment, 500) || null;
   const isPublic = truthy(body.public);
   const wantsUpdates = truthy(body.updates);
 
   if (name.length < 2) return json({ error: 'Please enter your name.', field: 'name' }, 400);
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return json({ error: 'Please enter a valid email address.', field: 'email' }, 400);
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return json({ error: 'Please enter a valid email address.', field: 'email' }, 400);
   if (!truthy(body.agree)) return json({ error: 'Please tick the box to confirm you agree with the petition.', field: 'agree' }, 400);
 
   const ip = request.headers.get('cf-connecting-ip') || '';
@@ -127,22 +197,32 @@ async function sign(request: Request, env: Env, ctx: ExecutionContext): Promise<
     }
   }
 
-  const existing = await env.DB.prepare('SELECT id FROM signatures WHERE email = ?1').bind(email).first();
+  const existing = email ? await env.DB.prepare('SELECT id FROM signatures WHERE email = ?1').bind(email).first() : null;
   if (existing) return json({ error: 'This email address has already signed. Thank you!', field: 'email', duplicate: true }, 409);
+  if (!email && ipHash) {
+    // Without an email we can't dedupe exactly; block the same name signing twice from the same network.
+    const same = await env.DB.prepare('SELECT id FROM signatures WHERE lower(name) = lower(?1) AND ip_hash = ?2')
+      .bind(name, ipHash)
+      .first();
+    if (same) return json({ error: 'It looks like you have already signed. Thank you!', field: 'name', duplicate: true }, 409);
+  }
 
   const signedAt = new Date().toISOString();
   const token = randomToken();
   await env.DB.prepare(
-    `INSERT INTO signatures (name, email, city, is_public, wants_updates, signed_at, manage_token, ip_hash)
-     VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)`,
+    `INSERT INTO signatures (name, email, city, state, zip, affiliation, comment, heard_from,
+                             is_public, wants_updates, signed_at, manage_token, ip_hash)
+     VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)`,
   )
-    .bind(name, email, city, isPublic ? 1 : 0, wantsUpdates ? 1 : 0, signedAt, token, ipHash)
+    .bind(name, email || null, city, state, zip, affiliation, comment, heardFrom,
+      isPublic ? 1 : 0, wantsUpdates && email ? 1 : 0, signedAt, token, ipHash)
     .run();
 
-  ctx.waitUntil(sendConfirmation(env, { name, email, city, isPublic, signedAt, token }));
+  const emailing = Boolean(email && env.RESEND_API_KEY && env.EMAIL_FROM);
+  if (emailing) ctx.waitUntil(sendConfirmation(env, { name, email, city, isPublic, signedAt, token }));
 
   const countRow = await env.DB.prepare('SELECT COUNT(*) AS n FROM signatures').first<{ n: number }>();
-  return json({ ok: true, signedAt, count: countRow?.n ?? null, emailQueued: Boolean(env.RESEND_API_KEY && env.EMAIL_FROM) });
+  return json({ ok: true, signedAt, count: countRow?.n ?? null, emailQueued: emailing });
 }
 
 // ---------- POST /api/petition/remove ----------
@@ -155,6 +235,36 @@ async function remove(request: Request, env: Env): Promise<Response> {
   const res = await env.DB.prepare('DELETE FROM signatures WHERE manage_token = ?1').bind(token).run();
   if (!res.meta?.changes) return json({ error: 'We could not find that signature. It may already have been removed.' }, 404);
   return json({ ok: true });
+}
+
+// ---------- GET /api/petition/export ----------
+// Used by the Google Apps Script in google-sheet/ to refresh the signer sheet daily.
+
+async function exportAll(request: Request, env: Env): Promise<Response> {
+  const auth = request.headers.get('authorization') || '';
+  if (!env.EXPORT_TOKEN || auth !== `Bearer ${env.EXPORT_TOKEN}`) return json({ error: 'Unauthorized' }, 401);
+  if (!env.DB) return json({ error: 'No database' }, 503);
+  const rows = await env.DB.prepare(
+    `SELECT id, name, email, city, state, zip, affiliation, comment, heard_from, is_public, wants_updates, signed_at
+     FROM signatures ORDER BY id ASC`,
+  ).all<Record<string, unknown>>();
+  return json({
+    exportedAt: new Date().toISOString(),
+    signers: rows.results.map((r) => ({
+      id: r.id,
+      name: r.name,
+      signedAt: r.signed_at,
+      public: r.is_public === 1,
+      email: r.email,
+      city: r.city,
+      state: r.state,
+      zip: r.zip,
+      affiliation: r.affiliation ? AFFILIATIONS[String(r.affiliation)] ?? r.affiliation : null,
+      heardFrom: r.heard_from ? HEARD_FROM[String(r.heard_from)] ?? r.heard_from : null,
+      comment: r.comment,
+      wantsUpdates: r.wants_updates === 1,
+    })),
+  });
 }
 
 // ---------- Email ----------
@@ -261,6 +371,11 @@ function clean(v: unknown, max: number): string {
   if (typeof v !== 'string') return '';
   // Drop control characters and collapse whitespace.
   return v.replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max);
+}
+
+function cleanMultiline(v: unknown, max: number): string {
+  if (typeof v !== 'string') return '';
+  return v.replace(/\r\n?/g, '\n').replace(/[\u0000-\u0009\u000b-\u001f\u007f]/g, ' ').replace(/\n{3,}/g, '\n\n').trim().slice(0, max);
 }
 
 function truthy(v: unknown): boolean {

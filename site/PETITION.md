@@ -8,9 +8,17 @@ Steps 2 and 3 are optional: without them signing still works, there is just no s
 (step 2) or no confirmation email (step 3).
 
 ## What gets stored
-One row per signature in the `signatures` table: name, email (lowercased), optional city/school,
-public or private choice, whether they want campaign updates, signing time (UTC), a secret
-removal token, a salted hash of the IP (rate limiting only), and email delivery status.
+One row per signature in the `signatures` table. Required: name and signing time (UTC, set
+automatically). Optional: email (lowercased), city, state, ZIP, Princeton connection, how they heard,
+"why I'm signing" comment, whether they want campaign updates. Also stored: public or private choice,
+a secret removal token, a salted hash of the IP (rate limiting and duplicate checks only), and email
+delivery status.
+
+The Worker creates and upgrades the table itself on its first request after a deploy (`ensureSchema`
+in `worker/index.ts`), so schema changes need no manual SQL. `migrations/` records each version.
+
+Duplicates: one signature per email. Without an email, the same name can't sign twice from the same
+network. Turnstile (step 2) matters more now that email is optional.
 The public list shows **only** name, city and time, and **only** for people who chose "Publicly".
 Emails are never exposed by the API.
 
@@ -34,6 +42,16 @@ Emails are never exposed by the API.
 
 Emails come from `EMAIL_FROM` (`Free Eva <petition@evaxie.us>`) with replies going to
 `EMAIL_REPLY_TO` (`weare@geodesic.pro`); change them in `wrangler.jsonc` > `vars`.
+
+## 4. Daily Google Sheet of signers
+`google-sheet/petition-sync.gs` is a Google Apps Script that pulls every signer from
+`/api/petition/export` and rewrites a "Signers" tab once a day (name, date, time, public?, city,
+state, ZIP, Princeton connection, how they heard, comment, wants updates). Emails are left out
+unless you set `INCLUDE_EMAIL = true` in the script.
+1. Worker `free-eva` > Settings > Variables and Secrets > add **Secret** `EXPORT_TOKEN` with a long
+   random string. The export endpoint is off until this exists.
+2. Open the Google Sheet > Extensions > Apps Script, paste the script, add Script Property
+   `EXPORT_TOKEN` with the same string, then run `setup` once and approve.
 
 ## Reading the signatures
 Dashboard > D1 > `free-eva-petition` > Console, for example:
