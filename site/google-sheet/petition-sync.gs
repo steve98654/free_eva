@@ -67,9 +67,11 @@ function syncSignatures() {
 
   sheet.clearContents();
   sheet.getRange(1, 1, 1, header.length).setValues([header]).setFontWeight('bold');
-  // Keep ZIP codes as text so leading zeros (08540) survive. Must be set before writing.
-  const zipCol = header.indexOf('ZIP') + 1;
-  sheet.getRange(2, zipCol, Math.max(rows.length, 1), 1).setNumberFormat('@');
+  // Keep ZIP codes and phone numbers as text (leading zeros, "+1 ..."). Must be set before writing.
+  ['ZIP', 'Phone'].forEach((h) => {
+    const col = header.indexOf(h) + 1;
+    if (col > 0) sheet.getRange(2, col, Math.max(rows.length, 1), 1).setNumberFormat('@');
+  });
   if (rows.length) sheet.getRange(2, 1, rows.length, header.length).setValues(rows);
   sheet.setFrozenRows(1);
   sheet.getRange(1, header.length + 2).setValue(
