@@ -1,0 +1,64 @@
+---
+import '../styles/global.css';
+import Logo from '../components/Logo.astro';
+import { site, tabs } from '../data/site';
+
+interface Props { title?: string; description?: string }
+const { title, description = site.tagline } = Astro.props;
+const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · ${site.nameZh}`;
+const path = Astro.url.pathname.replace(/\/?$/, '/');
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+const ogImage = new URL('/img/og-image.png', Astro.site).href;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Big+Shoulders+Stencil+Display:wght@600;800&family=Inter:wght@400;600;700&family=Noto+Serif+TC:wght@600;900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap header-row">
+        <Logo />
+        <nav class="tabs" aria-label="Sections">
+          {tabs.map((t) => (
+            <a href={t.href} class:list={['tab', { active: isActive(t.href) }]} aria-current={isActive(t.href) ? 'page' : undefined}>
+              <span class="tab-en">{t.label}</span>
+              <span class="tab-zh" lang="zh-Hant">{t.zh}</span>
+            </a>
+          ))}
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap footer-row">
+        <div>
+          <p class="foot-big">FREE EVA <span lang="zh-Hant">釋放謝翌</span></p>
+          <p class="muted">Firm, lawful, respectful. <span lang="zh-Hant">{site.respectZh}</span></p>
+        </div>
+        <div class="muted small">
+          <p>{site.domain} · Contact: <a href={`mailto:${site.links.email}`}>{site.links.email}</a></p>
+          <p>We support lawful immigration enforcement and ask that it be carried out with judgment and respect.</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
