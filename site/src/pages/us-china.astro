@@ -1,0 +1,163 @@
+---
+import Base from '../layouts/Base.astro';
+
+// kind: 'bridge' = a moment of connection; 'hard' = a hard chapter we name honestly.
+const timeline = [
+  { year: '1784', kind: 'bridge', title: 'The Empress of China sails to Canton',
+    body: 'Months after the Revolution ended, the first American merchant ship to reach China leaves New York for Guangzhou carrying ginseng and silver, and returns with tea, silk and porcelain. Trade with China was one of the new nation\'s first ties to the wider world.' },
+  { year: '1844', kind: 'hard', title: 'Treaty of Wangxia',
+    body: 'The first formal treaty between the two countries opens ports to American trade and grants Americans extraterritorial rights in China. Chinese historians count it among the "unequal treaties" of that era.' },
+  { year: '1854', kind: 'bridge', title: 'Yung Wing graduates from Yale',
+    body: 'Yung Wing (容閎) becomes the first Chinese student to graduate from an American college. He spends the rest of his life building educational bridges between the two countries.' },
+  { year: '1860s', kind: 'bridge', title: 'Building the railroad',
+    body: 'Thousands of Chinese workers, often in dangerous conditions and for lower pay, build much of the Central Pacific line through the Sierra Nevada. The transcontinental railroad is completed in 1869.' },
+  { year: '1868', kind: 'bridge', title: 'The Burlingame Treaty',
+    body: 'Negotiated by Anson Burlingame, an American who represented China, it recognizes the right of people to move freely between the two countries and promises reciprocal treatment for each other\'s citizens.' },
+  { year: '1872', kind: 'bridge', title: 'The Chinese Educational Mission',
+    body: 'Led by Yung Wing, 120 Chinese boys come to study in New England. Many return to become engineers, diplomats and leaders in China\'s modernization.' },
+  { year: '1882', kind: 'hard', title: 'The Chinese Exclusion Act',
+    body: 'Congress bars Chinese laborers from immigrating, the first U.S. law to exclude people by nationality. It stays in force for 61 years, and Chinese Americans face decades of discrimination and violence.' },
+  { year: '1898', kind: 'bridge', title: 'United States v. Wong Kim Ark',
+    body: 'The Supreme Court rules that a man born in San Francisco to Chinese parents is a U.S. citizen, affirming birthright citizenship for everyone born on American soil.' },
+  { year: '1909', kind: 'bridge', title: 'Boxer Indemnity Scholarships',
+    body: 'The U.S. returns part of its Boxer Rebellion indemnity to fund Chinese students in America and a preparatory school in Beijing that becomes Tsinghua University. A generation of Chinese scientists and scholars trains in the U.S.' },
+  { year: '1941', kind: 'bridge', title: 'Allies in the Second World War',
+    body: 'American volunteer pilots, the Flying Tigers, fight alongside China. Allied airmen fly supplies over "the Hump" of the Himalayas. The two nations fight as allies against Japan until 1945.' },
+  { year: '1943', kind: 'bridge', title: 'Exclusion repealed',
+    body: 'With China a wartime ally, Congress repeals the Chinese Exclusion Act and allows Chinese immigrants to become citizens. In 2011 and 2012 the Senate and House formally express regret for the exclusion laws.' },
+  { year: '1950s', kind: 'hard', title: 'War and estrangement',
+    body: 'After 1949 the two countries have no diplomatic relations and fight on opposite sides in Korea. In the McCarthy era, Caltech scientist Qian Xuesen (錢學森), a co-founder of JPL, is stripped of his clearance and deported to China in 1955. A lesson in what suspicion of scholars can cost.' },
+  { year: '1971', kind: 'bridge', title: 'Ping-pong diplomacy',
+    body: 'The U.S. table tennis team is invited to China, the first American group to visit in over two decades. The next year President Nixon travels to Beijing and the Shanghai Communiqué is signed.' },
+  { year: '1979', kind: 'bridge', title: 'Normalization and science',
+    body: 'The United States and the People\'s Republic of China establish diplomatic relations on January 1. That month Deng Xiaoping visits the U.S., and the two governments sign a Science and Technology Cooperation Agreement that underpins decades of joint research.' },
+  { year: '1980s–2010s', kind: 'bridge', title: 'Classrooms and labs',
+    body: 'Hundreds of thousands of Chinese students study in the U.S., for many years the largest group of international students, while Americans study and teach in China. Chinese and American scientists co-author research in medicine, physics, agriculture and climate, and China joins the international Human Genome Project.' },
+  { year: '2014', kind: 'bridge', title: 'Working together on climate',
+    body: 'The two largest emitters announce joint climate targets, helping set the stage for the 2015 Paris Agreement.' },
+  { year: '2018–2022', kind: 'hard', title: 'Suspicion returns',
+    body: 'Rising tension brings visa restrictions, the end of the Fulbright program in China in 2020, and the Justice Department\'s "China Initiative," ended in 2022 after criticism that it cast suspicion on scientists of Chinese descent.' },
+  { year: 'Today', kind: 'now', title: 'Competition, and a choice',
+    body: 'The relationship is strained. Competition is real and some of it is healthy. But the history shows that every time the two peoples studied, traded and worked together, both were better for it. We can choose that again.' },
+];
+
+const common = [
+  { en: 'A love of learning', zh: '好學', body: 'From the imperial examinations to the land-grant university, both cultures have bet their futures on education and see a good school as a family\'s proudest achievement.' },
+  { en: 'Family first', zh: '家庭', body: 'Parents in both countries sacrifice so their children can have more than they did. Many of the students who cross the Pacific carry that hope with them.' },
+  { en: 'Builders and inventors', zh: '創造', body: 'Two nations of builders, from the Grand Canal to the transcontinental railroad, and today two of the largest scientific communities in the world.' },
+  { en: 'Shared stakes', zh: '共同命運', body: 'Pandemics, climate, food security and nuclear safety ignore borders. Neither country can solve them alone.' },
+];
+
+const actions = [
+  { title: 'Welcome a student or scholar', body: 'Host an international student for a holiday meal, mentor a visiting researcher, or join your university\'s friendship program. Most guests remember how they were welcomed for the rest of their lives.' },
+  { title: 'Support exchange programs', body: 'Ask your representatives to protect student visas and academic exchange, and to support people-to-people programs such as scholar exchanges and sister-city partnerships.' },
+  { title: 'Separate people from governments', body: 'Criticize policies when you disagree with them, in either capital. Never hold ordinary people, or Chinese Americans, responsible for them. Speak up against anti-Asian harassment when you see it.' },
+  { title: 'Learn the other\'s story', body: 'Read the history, learn some Mandarin or English, visit, cook, watch each other\'s films. Curiosity is the opposite of suspicion.' },
+  { title: 'Collaborate in the open', body: 'If you are a researcher, keep doing open, lawful, transparent science with international colleagues, and follow your institution\'s rules so that trust can grow.' },
+  { title: 'Join groups that build bridges', body: 'Organizations like the National Committee on U.S.–China Relations, founded in 1966 and part of the ping-pong exchange, have spent decades building understanding. Find one near you and get involved.' },
+];
+---
+<Base title="US–China" description="240 years of US–China trade, study, science and friendship, the hard chapters too, and what we can do to strengthen the relationship.">
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="zh-title" lang="zh-Hant">中美相互尊重</p>
+      <h1>Two peoples, one long story.</h1>
+      <p class="lede">
+        We are saddened by how much of today's relationship between the United States and China is defined by
+        rivalry. Competition is real, but it is not the whole story. For 240 years Americans and Chinese have
+        traded, studied, built and fought side by side. We want to find that common ground again and work
+        toward collaboration.
+      </p>
+      <div class="btn-row">
+        <a class="btn" href="#history">Read the history</a>
+        <a class="btn ghost" href="#act">What we can do</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="history">
+    <div class="wrap">
+      <p class="eyebrow">240 years</p>
+      <h2>A history of connection</h2>
+      <p class="muted legend">
+        <span class="dot bridge"></span> Bridges built &nbsp;&nbsp;
+        <span class="dot hard"></span> Hard chapters, named honestly
+      </p>
+      <ol class="timeline">
+        {timeline.map((t) => (
+          <li class={t.kind}>
+            <span class="year">{t.year}</span>
+            <div class="t-body">
+              <h3>{t.title}</h3>
+              <p>{t.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">Common ground</p>
+      <h2>What we share</h2>
+      <div class="grid grid-2 common-grid">
+        {common.map((c) => (
+          <div class="card accent">
+            <h3>{c.en} <span class="zh orange common-zh" lang="zh-Hant">{c.zh}</span></h3>
+            <p class="muted">{c.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="act">
+    <div class="narrow">
+      <p class="eyebrow">Take action</p>
+      <h2>How we strengthen the relationship</h2>
+      <ol class="actions">
+        {actions.map((a) => (
+          <li>
+            <h3>{a.title}</h3>
+            <p>{a.body}</p>
+          </li>
+        ))}
+      </ol>
+      <blockquote>
+        Mutual respect is the basis for collaboration. <span class="zh orange" lang="zh-Hant">中美相互尊重</span>
+      </blockquote>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .legend { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+  .dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; }
+  .dot.bridge { background: var(--orange); }
+  .dot.hard { background: transparent; border: 2px solid var(--muted); }
+
+  .timeline { list-style: none; margin: 2rem 0 0; padding: 0; position: relative; }
+  .timeline::before { content: ''; position: absolute; left: 7.2rem; top: 0.4rem; bottom: 0.4rem; width: 2px; background: var(--line); }
+  .timeline li { display: grid; grid-template-columns: 6.4rem 1fr; gap: 1.8rem; padding: 0 0 2rem; position: relative; }
+  .timeline li::before {
+    content: ''; position: absolute; left: calc(7.2rem - 7px); top: 0.45rem;
+    width: 16px; height: 16px; border-radius: 50%; background: var(--orange); box-shadow: 0 0 0 4px var(--black);
+  }
+  .timeline li.hard::before { background: var(--black); border: 2px solid var(--muted); width: 12px; height: 12px; }
+  .timeline li.now::before { background: var(--white); }
+  .year { font-family: var(--font-stencil); color: var(--orange); font-size: 1.15rem; text-align: right; line-height: 1.6; }
+  .hard .year { color: var(--muted); }
+  .t-body h3 { font-size: 1.25rem; margin-bottom: 0.25rem; }
+  .t-body p { margin: 0; color: var(--muted); max-width: 44rem; }
+  .hard .t-body h3 { color: var(--muted); }
+  @media (min-width: 700px) { .common-grid { grid-template-columns: 1fr 1fr; } }
+  .common-zh { font-size: 1rem; margin-left: 0.4rem; letter-spacing: 0.1em; }
+
+  @media (max-width: 640px) {
+    .timeline::before { left: 7px; }
+    .timeline li { grid-template-columns: 1fr; gap: 0.1rem; padding-left: 2rem; }
+    .timeline li::before { left: 0; }
+    .year { text-align: left; }
+  }
+</style>
