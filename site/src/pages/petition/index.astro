@@ -2,7 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import { site } from '../../data/site';
 ---
-<Base title="Petition" description="Sign the petition: fair treatment for Eva Xie, respectful reform of how ICE interacts with the public, and mutual respect between the United States and China.">
+<Base title="Petition" description="Sign the petition to the White House, the courts and Congress: fair treatment for Eva Xie, respectful reform of how ICE interacts with the public, and mutual respect between the United States and China.">
   <section class="page-hero">
     <div class="wrap">
       <p class="zh-title" lang="zh-Hant">連署請願</p>
@@ -27,8 +27,9 @@ import { site } from '../../data/site';
       <p class="eyebrow">The petition</p>
       <h2>Fair treatment, respectful enforcement, mutual respect</h2>
       <p class="muted small">
-        To the U.S. Department of Homeland Security, U.S. Immigration and Customs Enforcement, and our
-        elected representatives in Congress:
+        To the President and the White House; the executive branch, including the Department of Homeland
+        Security, U.S. Immigration and Customs Enforcement and the Department of Justice; the judicial branch,
+        including the federal courts and the immigration courts; and our elected representatives in Congress:
       </p>
 
       <p>
@@ -66,6 +67,29 @@ import { site } from '../../data/site';
           for Americans who study, work and travel abroad.
         </li>
       </ol>
+
+      <h3>Of each branch of government, we ask:</h3>
+      <ul class="branches">
+        <li>
+          <strong>The White House and the executive branch.</strong>
+          Set clear, published standards for how ICE and CBP treat students, scholars and visitors in valid
+          status, and see that they are followed: use discretion, explain every stop and detention, ensure
+          prompt access to counsel and consulates, and keep detention a last resort. Review Eva's case
+          promptly and use the discretion the law already provides to release her while it is decided.
+        </li>
+        <li>
+          <strong>The judicial branch.</strong>
+          We respect the independence of the courts and ask only for what the law promises everyone: that
+          Eva's case, and every case like hers, be heard promptly and fairly, with full due process and
+          meaningful access to counsel.
+        </li>
+        <li>
+          <strong>Congress.</strong>
+          Exercise oversight of how immigration enforcement treats students and scholars, and support clear
+          guidance on access to counsel, timely notice to families and universities, and alternatives to
+          detention.
+        </li>
+      </ul>
 
       <blockquote>
         Supporting enforcement and asking it to do better are not opposites. Mutual respect is the basis for
@@ -325,7 +349,9 @@ import { site } from '../../data/site';
   .petition-text h3 { margin-top: 2rem; }
   .asks { padding-left: 1.3rem; display: grid; gap: 1rem; }
   .asks li::marker { color: var(--orange); font-family: var(--font-stencil); }
-  .asks strong { display: block; color: var(--white); margin-bottom: 0.2rem; }
+  .branches { padding-left: 1.3rem; display: grid; gap: 1rem; }
+  .branches li::marker { color: var(--orange); }
+  .asks strong, .branches strong { display: block; color: var(--white); margin-bottom: 0.2rem; }
   blockquote .zh { display: block; margin-top: 0.5rem; color: var(--orange); font-size: 1rem; }
 
   .sign-form { display: grid; gap: 1.1rem; }
