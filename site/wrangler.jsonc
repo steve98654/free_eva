@@ -26,14 +26,13 @@
     "TURNSTILE_SITE_KEY": ""
   }
 
-  // PETITION DATABASE: uncomment once the D1 database exists (see PETITION.md step 1).
-  // Until then the petition page shows the statement and "signing opens soon".
-  // ,"d1_databases": [
-  //   {
-  //     "binding": "DB",
-  //     "database_name": "free-eva-petition",
-  //     "database_id": "PASTE-DATABASE-ID-HERE",
-  //     "migrations_dir": "migrations"
-  //   }
-  // ]
+  // Petition database (D1). Schema: migrations/. See PETITION.md.
+  ,"d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "free-eva-petition",
+      "database_id": "80335ba7-cd6b-4a27-af9b-817511cf8dbf",
+      "migrations_dir": "migrations"
+    }
+  ]
 }
