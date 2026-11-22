@@ -8,12 +8,13 @@ Upload files for the rally shirt, made to Bonfire's artwork guidance (PNG, trans
 | File | Size | Prints at |
 | --- | --- | --- |
 | `bonfire/bonfire-front.png` | 3312 x 2912 px | about 11 x 9.7 in, chest |
-| `bonfire/bonfire-back.png` | 3300 x 3312 px | about 11 x 11 in, upper back |
+| `bonfire/bonfire-back.png` | 3300 x 3614 px | about 11 x 12 in, upper back |
 
 - Shirt color: black. Inks: orange #E77500 and white.
 - Front has a Fountain of Freedom icon (Scudder Plaza, where the rally is held) above 釋放謝翌; the icon alone is `bonfire/fountain-of-freedom-icon.svg`.
 - The Princeton shield and fountain icons from the rally shirt are left off, because the university's
   marks can't be sold on merchandise without a license.
+- Back URL line: "READ · SHARE · ACT" over `> evaxie.us` with a cursor block, in the Special Elite typewriter font (other options in `bonfire/url-options.png`).
 - `bonfire/shirt-mockup.png` is the front and back preview used on the site's Shop page.
 - `bonfire/print-source.html` + `bonfire/render.js` regenerate the files (`node render.js`).
 
