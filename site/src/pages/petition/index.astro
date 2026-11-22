@@ -1,0 +1,362 @@
+---
+import Base from '../../layouts/Base.astro';
+import { site } from '../../data/site';
+---
+<Base title="Petition" description="Sign the petition: fair treatment for Eva Xie, respectful reform of how ICE interacts with the public, and mutual respect between the United States and China.">
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="zh-title" lang="zh-Hant">連署請願</p>
+      <h1>Sign the petition.</h1>
+      <p class="lede">
+        Fair treatment for Eva. Respectful enforcement for everyone. Mutual respect between all people and
+        countries, especially the United States and China.
+      </p>
+      <p class="count-line" aria-live="polite">
+        <span class="count-num" id="sig-count">&nbsp;</span>
+        <span id="sig-count-label" class="muted"></span>
+      </p>
+      <div class="btn-row">
+        <a class="btn" href="#sign">Add your name</a>
+        <a class="btn ghost" href="#statement">Read the petition</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="statement">
+    <div class="narrow petition-text">
+      <p class="eyebrow">The petition</p>
+      <h2>Fair treatment, respectful enforcement, mutual respect</h2>
+      <p class="muted small">
+        To the U.S. Department of Homeland Security, U.S. Immigration and Customs Enforcement, and our
+        elected representatives in Congress:
+      </p>
+
+      <p>
+        We are students, scholars, neighbors and fellow Americans. We support the lawful mission of
+        immigration enforcement. A nation has the right to decide who enters and who stays, and the officers
+        who carry out that work deserve our respect. We also believe that how that power is used matters, and
+        that enforcement is strongest when it earns the public's trust.
+      </p>
+      <p>
+        On November 19, 2026, Eva Xie, a PhD student in neuroscience at Princeton University, was detained by
+        ICE at Ronald Reagan Washington National Airport as she returned from Neuroscience 2026, the annual
+        meeting of the Society for Neuroscience. Eva came to the United States with her family at age 14 and
+        has lived here since. She is a student and a researcher, not a threat.
+      </p>
+
+      <h3>We respectfully ask:</h3>
+      <ol class="asks">
+        <li>
+          <strong>Fair treatment for Eva Xie.</strong>
+          That she be treated with dignity and humane care while in custody; that she have prompt and
+          regular access to her attorney, her family and her university; that her case be reviewed quickly
+          and fairly; and that she be released to continue her studies while it is decided.
+        </li>
+        <li>
+          <strong>Reform of how ICE interacts with the public.</strong>
+          That officers identify themselves and clearly explain why a person is being stopped or held, in a
+          language they understand; that detention be a last resort for people with deep community ties who
+          pose no danger; that families, attorneys, consulates and universities be notified promptly; and
+          that every person be treated with dignity, whatever their status.
+        </li>
+        <li>
+          <strong>Mutual respect between all people and countries, especially the United States and China.</strong>
+          That students and scholars be welcomed as bridges between nations, not treated as suspects
+          because of where they were born; and that our government show visitors the same respect we expect
+          for Americans who study, work and travel abroad.
+        </li>
+      </ol>
+
+      <blockquote>
+        Supporting enforcement and asking it to do better are not opposites. Mutual respect is the basis for
+        collaboration.
+        <span class="zh" lang="zh-Hant">相互尊重是合作的基礎。</span>
+      </blockquote>
+    </div>
+  </section>
+
+  <section id="sign" class="sign-section">
+    <div class="narrow">
+      <p class="eyebrow">Add your name</p>
+      <h2>Sign the petition</h2>
+
+      <div id="sign-closed" class="card notice" hidden>
+        <h3>Online signing opens soon</h3>
+        <p class="muted">
+          We are finishing the setup. In the meantime, you can add your name by emailing
+          <a href={`mailto:${site.links.email}?subject=${encodeURIComponent('Sign the petition')}`}>{site.links.email}</a>.
+        </p>
+      </div>
+
+      <form id="sign-form" class="card sign-form" novalidate>
+        <div class="field">
+          <label for="f-name">Full name <span class="req">required</span></label>
+          <input id="f-name" name="name" type="text" autocomplete="name" maxlength="80" required />
+        </div>
+        <div class="field">
+          <label for="f-email">Email <span class="req">required</span></label>
+          <input id="f-email" name="email" type="email" autocomplete="email" maxlength="254" required />
+          <p class="hint">We send a confirmation here. Your email is never shown publicly or shared.</p>
+        </div>
+        <div class="field">
+          <label for="f-city">City or school <span class="opt">optional</span></label>
+          <input id="f-city" name="city" type="text" autocomplete="address-level2" maxlength="80" placeholder="e.g. Princeton, NJ" />
+        </div>
+
+        <fieldset class="field privacy">
+          <legend>Show my signature</legend>
+          <label class="choice">
+            <input type="radio" name="public" value="true" checked />
+            <span><strong>Publicly.</strong> Show my name (and city, if given) on the list of signers below.</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="public" value="false" />
+            <span><strong>Privately.</strong> Count my signature, but do not show my name anywhere.</span>
+          </label>
+        </fieldset>
+
+        <label class="choice check">
+          <input type="checkbox" name="agree" required />
+          <span>I have read and agree with the petition above.</span>
+        </label>
+        <label class="choice check">
+          <input type="checkbox" name="updates" />
+          <span>Email me occasional campaign updates. <span class="muted">(optional)</span></span>
+        </label>
+
+        <!-- Spam trap: hidden from people, filled in by bots. -->
+        <div class="hp" aria-hidden="true">
+          <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+        </div>
+
+        <div id="turnstile-box"></div>
+
+        <p id="form-error" class="form-error" role="alert" hidden></p>
+        <button class="btn" type="submit" id="sign-btn">Sign the petition</button>
+        <p class="hint">
+          We record your name, email and the time you signed. You can remove your signature at any time using
+          the link in your confirmation email.
+        </p>
+      </form>
+
+      <div id="sign-done" class="card done" hidden tabindex="-1">
+        <p class="eyebrow">Thank you</p>
+        <h3 id="done-title">You signed the petition.</h3>
+        <p id="done-time" class="muted"></p>
+        <p id="done-email" class="muted"></p>
+        <p>The next step is the most powerful one: share it with one more person.</p>
+        <div class="btn-row">
+          <button class="btn" type="button" id="share-btn">Share the petition</button>
+          <a class="btn ghost" href="/free-eva/#act">More ways to help</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="signers">
+    <div class="narrow">
+      <p class="eyebrow">Signers</p>
+      <h2>Who has signed</h2>
+      <p class="muted small" id="signers-note">Signers who chose to be listed publicly, newest first. Signers who chose privacy are counted in the total but not shown.</p>
+      <ul id="signer-list" class="signer-list"></ul>
+      <p id="signers-empty" class="muted" hidden>Be the first to sign publicly.</p>
+      <button class="btn ghost" type="button" id="more-btn" hidden>Show more</button>
+    </div>
+  </section>
+</Base>
+
+<script>
+  type Signer = { name: string; city: string | null; signedAt: string };
+  type PetitionData = { ready: boolean; count: number; signers: Signer[]; nextCursor: number | null; turnstileSiteKey: string | null };
+
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+  const form = $<HTMLFormElement>('sign-form');
+  const errorEl = $('form-error');
+  const btn = $<HTMLButtonElement>('sign-btn');
+  const list = $<HTMLUListElement>('signer-list');
+  const moreBtn = $<HTMLButtonElement>('more-btn');
+  let cursor: number | null = null;
+  let turnstileWidget: string | undefined;
+
+  const fmtTime = (iso: string) =>
+    new Date(iso).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+
+  function setCount(n: number) {
+    $('sig-count').textContent = n.toLocaleString();
+    $('sig-count-label').textContent = n === 1 ? 'person has signed' : 'people have signed';
+  }
+
+  function addSigners(signers: Signer[], prepend = false) {
+    for (const s of signers) {
+      const li = document.createElement('li');
+      const name = document.createElement('span');
+      name.className = 'sn';
+      name.textContent = s.name; // textContent: never render signer input as HTML
+      li.append(name);
+      if (s.city) {
+        const city = document.createElement('span');
+        city.className = 'sc';
+        city.textContent = s.city;
+        li.append(city);
+      }
+      const t = document.createElement('time');
+      t.dateTime = s.signedAt;
+      t.textContent = fmtTime(s.signedAt);
+      li.append(t);
+      prepend ? list.prepend(li) : list.append(li);
+    }
+    $('signers-empty').hidden = list.children.length > 0;
+  }
+
+  async function load(more = false) {
+    try {
+      const res = await fetch(`/api/petition${more && cursor ? `?cursor=${cursor}` : ''}`);
+      if (!res.ok) throw new Error(String(res.status));
+      const data = (await res.json()) as PetitionData;
+      if (!more) {
+        if (!data.ready) {
+          form.hidden = true;
+          $('sign-closed').hidden = false;
+          $('signers').hidden = true;
+          return;
+        }
+        setCount(data.count);
+        if (data.turnstileSiteKey) mountTurnstile(data.turnstileSiteKey);
+      }
+      addSigners(data.signers);
+      cursor = data.nextCursor;
+      moreBtn.hidden = !cursor;
+    } catch {
+      // API not reachable (for example `astro dev` without the Worker). Keep the form visible.
+      $('signers-empty').hidden = false;
+    }
+  }
+
+  function mountTurnstile(siteKey: string) {
+    const s = document.createElement('script');
+    s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+    s.async = true;
+    s.onload = () => {
+      // @ts-ignore turnstile is a global from the script above
+      turnstileWidget = window.turnstile.render('#turnstile-box', { sitekey: siteKey, theme: 'dark' });
+    };
+    document.head.append(s);
+  }
+
+  function showError(msg: string, field?: string) {
+    errorEl.textContent = msg;
+    errorEl.hidden = false;
+    if (field) (form.elements.namedItem(field) as HTMLElement | null)?.focus();
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorEl.hidden = true;
+    const fd = new FormData(form);
+    const name = String(fd.get('name') || '').trim();
+    const email = String(fd.get('email') || '').trim();
+    if (name.length < 2) return showError('Please enter your name.', 'name');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return showError('Please enter a valid email address.', 'email');
+    if (!fd.get('agree')) return showError('Please tick the box to confirm you agree with the petition.', 'agree');
+
+    const payload = {
+      name,
+      email,
+      city: String(fd.get('city') || '').trim(),
+      public: fd.get('public') === 'true',
+      agree: true,
+      updates: Boolean(fd.get('updates')),
+      website: String(fd.get('website') || ''),
+      turnstileToken: String(fd.get('cf-turnstile-response') || ''),
+    };
+
+    btn.disabled = true;
+    btn.textContent = 'Signing…';
+    try {
+      const res = await fetch('/api/petition/sign', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) {
+        showError(data.error || 'Something went wrong. Please try again.', data.field);
+        // @ts-ignore
+        if (turnstileWidget !== undefined) window.turnstile?.reset(turnstileWidget);
+        return;
+      }
+      form.hidden = true;
+      const done = $('sign-done');
+      done.hidden = false;
+      $('done-title').textContent = `Thank you, ${name.split(' ')[0]}. You signed the petition.`;
+      $('done-time').textContent = `Signed ${fmtTime(data.signedAt)}. ${payload.public ? 'Your name is on the public list below.' : 'Your signature is private: it is counted but not shown.'}`;
+      $('done-email').textContent = data.emailQueued ? `A confirmation email is on its way to ${email}.` : '';
+      if (typeof data.count === 'number') setCount(data.count);
+      if (payload.public) addSigners([{ name, city: payload.city || null, signedAt: data.signedAt }], true);
+      done.focus();
+    } catch {
+      showError('We could not reach the server. Check your connection and try again.');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Sign the petition';
+    }
+  });
+
+  $('share-btn').addEventListener('click', async () => {
+    const url = `${location.origin}/petition/`;
+    const text = 'I signed the petition for fair treatment for Eva Xie and mutual respect. Add your name:';
+    if (navigator.share) {
+      try { await navigator.share({ title: 'Free Eva petition', text, url }); } catch { /* cancelled */ }
+    } else {
+      await navigator.clipboard?.writeText(url);
+      $('share-btn').textContent = 'Link copied';
+    }
+  });
+
+  moreBtn.addEventListener('click', () => load(true));
+  load();
+</script>
+
+<style>
+  .count-line { margin: 1.4rem 0 0; display: flex; align-items: baseline; gap: 0.6rem; flex-wrap: wrap; min-height: 2.6rem; }
+  .count-num { font-family: var(--font-stencil); color: var(--orange); font-size: clamp(2rem, 5vw, 2.8rem); line-height: 1; }
+
+  .petition-text p, .petition-text li { font-size: 1.1rem; }
+  .petition-text h3 { margin-top: 2rem; }
+  .asks { padding-left: 1.3rem; display: grid; gap: 1rem; }
+  .asks li::marker { color: var(--orange); font-family: var(--font-stencil); }
+  .asks strong { display: block; color: var(--white); margin-bottom: 0.2rem; }
+  blockquote .zh { display: block; margin-top: 0.5rem; color: var(--orange); font-size: 1rem; }
+
+  .sign-form { display: grid; gap: 1.1rem; }
+  .field { display: grid; gap: 0.35rem; margin: 0; border: 0; padding: 0; }
+  .field > label, .field legend { font-weight: 600; }
+  .req, .opt { font-weight: 400; font-size: 0.8rem; color: var(--muted); margin-left: 0.3rem; }
+  input[type='text'], input[type='email'] {
+    font: inherit; color: var(--white); background: var(--black); border: 1px solid var(--line);
+    border-radius: 4px; padding: 0.7rem 0.8rem; width: 100%;
+  }
+  input[type='text']:focus, input[type='email']:focus { outline: 2px solid var(--orange); outline-offset: 1px; border-color: var(--orange); }
+  .hint { font-size: 0.88rem; color: var(--muted); margin: 0; }
+  .privacy { gap: 0.55rem; }
+  .privacy legend { margin-bottom: 0.4rem; }
+  .choice { display: flex; gap: 0.65rem; align-items: flex-start; cursor: pointer; }
+  .choice input { accent-color: var(--orange); width: 1.15rem; height: 1.15rem; margin-top: 0.25rem; flex: none; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .form-error { color: #ffb4a8; background: color-mix(in srgb, #ff4d2e 14%, transparent); border-left: 4px solid #ff6a4d; padding: 0.6rem 0.8rem; margin: 0; }
+  .sign-form .btn { justify-self: start; cursor: pointer; font-size: 1.05rem; }
+  .sign-form .btn:disabled { opacity: 0.6; cursor: wait; }
+  .done { border-top: 4px solid var(--orange); }
+  .done .btn { cursor: pointer; font-size: 1rem; }
+  .notice { border-top: 4px solid var(--orange); }
+
+  .signer-list { list-style: none; padding: 0; margin: 1.2rem 0; display: grid; gap: 0; }
+  .signer-list :global(li) {
+    display: flex; flex-wrap: wrap; gap: 0.2rem 0.8rem; align-items: baseline;
+    padding: 0.65rem 0; border-bottom: 1px solid var(--line);
+  }
+  .signer-list :global(.sn) { font-weight: 600; }
+  .signer-list :global(.sc) { color: var(--muted); }
+  .signer-list :global(time) { margin-left: auto; color: var(--muted); font-size: 0.85rem; }
+  #more-btn { cursor: pointer; }
+</style>

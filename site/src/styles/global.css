@@ -25,6 +25,7 @@ body {
   line-height: 1.65;
 }
 img { max-width: 100%; }
+[hidden] { display: none !important; }
 a { color: var(--orange-soft); }
 a:hover { color: var(--orange); }
 
