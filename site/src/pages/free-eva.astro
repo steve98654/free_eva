@@ -3,6 +3,20 @@ import Base from '../layouts/Base.astro';
 import Placeholder from '../components/Placeholder.astro';
 import { site } from '../data/site';
 const { links } = site;
+const graphics = [
+  { file: 'social-avatar', title: 'Profile picture', note: 'Square, for any social account', dark: true },
+  { file: 'social-share-card', title: 'Share image', note: '1200×630 link preview and post image', dark: true },
+  { file: 'social-banner-x', title: 'X / Twitter banner', note: '1500×500 header', dark: true },
+  { file: 'social-banner-facebook', title: 'Facebook cover', note: '1640×624 cover photo', dark: true },
+  { file: 'sticker-round', title: 'Round sticker', note: 'Print at 3 or 4 inches', dark: false },
+  { file: 'print-stacked-transparent', title: 'Poster and shirt logo', note: 'Transparent, for printing on light or dark', dark: false },
+  { file: 'logo-horizontal-dark', title: 'Logo, horizontal (dark)', note: 'For dark backgrounds', dark: true },
+  { file: 'logo-horizontal-light', title: 'Logo, horizontal (light)', note: 'For white paper and slides', dark: false },
+  { file: 'logo-stacked-dark', title: 'Logo, stacked', note: 'Square-ish lockup', dark: true },
+  { file: 'logo-chinese-dark', title: 'Chinese lockup', note: '釋放謝翌 leads, for Chinese-language posts', dark: true },
+  { file: 'mark', title: 'Emblem only', note: 'The yin-yang and thirteen stars', dark: false },
+  { file: 'mono-black', title: 'One-color black', note: 'For photocopies, stamps and stencils', dark: false },
+];
 ---
 <Base title="Free Eva" description="Eva Xie, a Princeton PhD student, was detained by ICE on returning from a conference. Help bring her home.">
   <section class="page-hero">
@@ -92,13 +106,42 @@ const { links } = site;
         </li>
         <li>
           <h3>Share her story</h3>
-          <p>Share <strong>{site.domain}</strong> with your friends, your department and your local paper. Use #FreeEva and <span class="zh" lang="zh-Hant">#釋放謝翌</span>.</p>
+          <p>Share <strong>{site.domain}</strong> with your friends, your department and your local paper. Use #FreeEva and <span class="zh" lang="zh-Hant">#釋放謝翌</span>. Profile pictures, banners and share images are in <a href="#graphics">the graphics kit</a> below.</p>
         </li>
         <li>
           <h3>Get in touch</h3>
           <p>Want to volunteer, organize on your campus, or talk to the press? Email us at <a href={`mailto:${links.email}`}>{links.email}</a>.</p>
         </li>
       </ol>
+    </div>
+  </section>
+  <section id="graphics">
+    <div class="wrap">
+      <p class="eyebrow">Graphics kit</p>
+      <h2>Share the graphics</h2>
+      <p class="muted kit-intro">
+        Free to use for supporting Eva: profile pictures, banners, posters and shirts. Please don't change the
+        colors or add to the emblem. Each item comes as a PNG and as an SVG that scales to any size.
+      </p>
+      <div class="btn-row">
+        <a class="btn" href="/downloads/free-eva-graphics.zip" download>Download everything (.zip)</a>
+        <a class="btn ghost" href="/downloads/brand-guide.png" download>Brand guide</a>
+      </div>
+      <ul class="kit">
+        {graphics.map((g) => (
+          <li class="card">
+            <a class:list={['thumb', { light: !g.dark }]} href={`/downloads/${g.file}.png`} download>
+              <img src={`/downloads/thumbs/${g.file}.webp`} alt={g.title} loading="lazy" />
+            </a>
+            <h3>{g.title}</h3>
+            <p class="muted">{g.note}</p>
+            <p class="dl">
+              <a href={`/downloads/${g.file}.png`} download>PNG</a>
+              <a href={`/downloads/${g.file}.svg`} download>SVG</a>
+            </p>
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
 </Base>
@@ -108,4 +151,13 @@ const { links } = site;
   .facts dt { font-family: var(--font-display); font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--orange); }
   .facts dd { margin: 0; }
   @media (max-width: 520px) { .facts { grid-template-columns: 1fr; gap: 0.15rem; } .facts dd { margin-bottom: 0.7rem; } }
+  .kit-intro { max-width: 60ch; }
+  .kit { list-style: none; padding: 0; margin: 2rem 0 0; display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+  .kit .card { display: flex; flex-direction: column; }
+  .kit h3 { margin: 0.9rem 0 0.25rem; font-size: 1.05rem; }
+  .kit .muted { font-size: 0.9rem; margin: 0 0 0.75rem; }
+  .thumb { display: grid; place-items: center; aspect-ratio: 4 / 3; background: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 0.75rem; }
+  .thumb.light { background: #fff; }
+  .thumb img { max-width: 100%; max-height: 100%; object-fit: contain; }
+  .dl { margin-top: auto; display: flex; gap: 1rem; font-weight: 700; }
 </style>
