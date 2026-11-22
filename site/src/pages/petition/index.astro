@@ -1,207 +1,180 @@
 ---
 import Base from '../../layouts/Base.astro';
+import T from '../../components/T.astro';
 import { site } from '../../data/site';
+const { goal, deliveryDate, deliveryDateZh } = site.petition;
 const states = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','District of Columbia','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Puerto Rico','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming','Guam','U.S. Virgin Islands','American Samoa','Northern Mariana Islands'];
+const affiliations = [
+  ['student', 'Princeton student', '普林斯頓學生'],
+  ['faculty_staff', 'Princeton faculty or staff', '普林斯頓教職員'],
+  ['alum', 'Princeton alum', '普林斯頓校友'],
+  ['community', 'Community member', '社區居民'],
+  ['unaffiliated', 'Unaffiliated', '無關聯'],
+];
+const heard = [
+  ['qr', 'QR code (shirt, poster, sticker)', 'QR 碼（T 恤、海報、貼紙）'],
+  ['social', 'Social media', '社群媒體'],
+  ['rally', 'Rally or event', '集會或活動'],
+  ['friend', 'Friend or colleague', '朋友或同事'],
+  ['news', 'News story', '新聞報導'],
+  ['email', 'Email or group chat', '電子郵件或群組聊天'],
+  ['other', 'Other', '其他'],
+];
+const shareUrl = 'https://evaxie.us/petition/';
+const shareText = 'I signed the petition for fair treatment for Eva Xie and mutual respect between the U.S. and China. Add your name:';
+const enc = encodeURIComponent;
+const shares = [
+  { id: 'whatsapp', label: 'WhatsApp', href: `https://wa.me/?text=${enc(`${shareText} ${shareUrl}`)}` },
+  { id: 'x', label: 'X', href: `https://twitter.com/intent/tweet?text=${enc(shareText)}&url=${enc(shareUrl)}` },
+  { id: 'facebook', label: 'Facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${enc(shareUrl)}` },
+  { id: 'email', label: 'Email', labelZh: '電子郵件', href: `mailto:?subject=${enc('Sign the petition for Eva Xie')}&body=${enc(`${shareText}\n${shareUrl}`)}` },
+];
 ---
-<Base title="Petition" description="Sign the petition to the White House, the courts and Congress: fair treatment for Eva Xie, respectful reform of how ICE interacts with the public, and mutual respect between the United States and China.">
+<Base title="Petition" description="Sign the petition to the President, the Executive and Judicial branches and Congress: fair treatment for Eva Xie, respectful reform of how ICE interacts with the public, and mutual respect between the United States and China.">
   <section class="page-hero">
     <div class="wrap">
-      <p class="zh-title" lang="zh-Hant">連署請願</p>
-      <h1>Sign the petition.</h1>
-      <p class="lede">
-        Fair treatment for Eva. Respectful enforcement for everyone. Mutual respect between all people and
-        countries, especially the United States and China.
-      </p>
-      <p class="count-line" aria-live="polite">
-        <span class="count-num" id="sig-count">&nbsp;</span>
-        <span id="sig-count-label" class="muted"></span>
-      </p>
-      <div class="btn-row">
-        <a class="btn" href="#sign">Add your name</a>
-        <a class="btn ghost" href="#statement">Read the petition</a>
+      <div class="lang-row">
+        <button type="button" class="lang-btn" data-setlang="en" aria-pressed="true">English</button>
+        <button type="button" class="lang-btn" data-setlang="zh" aria-pressed="false" lang="zh-Hant">中文</button>
       </div>
-    </div>
-  </section>
-
-  <section id="statement">
-    <div class="narrow petition-text">
-      <p class="eyebrow">The petition</p>
-      <h2>Fair treatment, respectful enforcement, mutual respect</h2>
-      <p class="muted small">
-        The President of the United States, your Cabinet, the broader Executive branch, U.S. Immigration and
-        Customs Enforcement, the Judicial branch and Department of Justice; the judicial branch, including the
-        federal and immigration courts; and our elected representatives in Congress:
+      <p class="zh-title" lang="zh-Hant">連署請願</p>
+      <h1><T en="Sign the petition." zh="請加入連署。" /></h1>
+      <p class="lede">
+        <T
+          en="Fair treatment for Eva. Respectful enforcement for everyone. Mutual respect between all people and countries, especially the United States and China."
+          zh="公平對待謝翌。以尊重的方式執法，對待每一個人。所有人民與國家之間，特別是美國與中國之間的相互尊重。"
+        />
       </p>
 
-      <p>
-        We are students, scholars, neighbors and fellow Americans. We support the lawful mission of
-        immigration enforcement. A nation has the right to decide who enters and who stays, and the officers
-        who carry out that work deserve our respect. We also believe that how that power is used matters, and
-        that enforcement is strongest when it earns the public's trust.
-      </p>
-      <p>
-        On November 19, 2026, Eva Xie, a PhD student in neuroscience at Princeton University, was detained by
-        ICE at Ronald Reagan Washington National Airport as she returned from Neuroscience 2026, the annual
-        meeting of the Society for Neuroscience. Eva came to the United States with her family at age 14 and
-        has lived here since. She is a student and a researcher, not a threat.
-      </p>
+      <div class="goal" aria-live="polite">
+        <p class="count-line">
+          <span class="count-num" id="sig-count">&nbsp;</span>
+          <span class="muted">
+            <T en={`of ${goal.toLocaleString('en-US')} signatures`} zh={`／目標 ${goal.toLocaleString('en-US')} 人連署`} />
+          </span>
+        </p>
+        <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax={goal} aria-valuenow="0" id="goal-bar">
+          <span id="goal-fill"></span>
+        </div>
+        <p class="delivery small muted">
+          {deliveryDate
+            ? <T
+                en={`We will deliver the signatures to the White House, the Department of Justice and New Jersey's congressional delegation on ${deliveryDate}.`}
+                zh={`我們將於${deliveryDateZh ?? deliveryDate}把連署遞交給白宮、司法部及新澤西州國會代表團。`}
+              />
+            : <T
+                en="We will deliver the signatures to the White House, the Department of Justice and New Jersey's congressional delegation. Delivery date to be announced here."
+                zh="我們將把連署遞交給白宮、司法部及新澤西州國會代表團。遞交日期將在此公布。"
+              />}
+        </p>
+      </div>
 
-      <h3>We respectfully ask:</h3>
-      <ol class="asks">
-        <li>
-          <strong>Fair treatment for Eva Xie.</strong>
-          That she be treated with dignity and humane care while in custody; that she have prompt and
-          regular access to her attorney, her family and her university; that her case be reviewed quickly
-          and fairly; and that she be released to continue her studies while it is decided.
-        </li>
-        <li>
-          <strong>Reform of how ICE interacts with the public.</strong>
-          That officers identify themselves and clearly explain why a person is being stopped or held, in a
-          language they understand; that detention be a last resort for people with deep community ties who
-          pose no danger; that families, attorneys, consulates and universities be notified promptly; and
-          that every person be treated with dignity, whatever their status.
-        </li>
-        <li>
-          <strong>Mutual respect between all people and countries, especially the United States and China.</strong>
-          That students and scholars be welcomed as bridges between nations, not treated as suspects
-          because of where they were born; and that our government show visitors the same respect we expect
-          for Americans who study, work and travel abroad.
-        </li>
-      </ol>
-
-      <h3>Of each branch of government, we ask:</h3>
-      <ul class="branches">
-        <li>
-          <strong>The White House and the Executive branch.</strong>
-          Set clear, published standards for how ICE and CBP treat students, scholars and visitors in valid
-          status, and see that they are followed: use discretion, explain every stop and detention, ensure
-          prompt access to counsel and consulates, and keep detention a last resort. Review Eva's case
-          promptly and use the discretion the law already provides to release her while it is decided.
-        </li>
-        <li>
-          <strong>The Judicial branch.</strong>
-          We respect the independence of the courts and ask only for what the law promises everyone: that
-          Eva's case, and every case like hers, be heard promptly and fairly, with full due process and
-          meaningful access to counsel.
-        </li>
-        <li>
-          <strong>Congress.</strong>
-          Exercise oversight of how immigration enforcement treats students and scholars, and support clear
-          guidance on access to counsel, timely notice to families and universities, and alternatives to
-          detention.
-        </li>
-      </ul>
-
-      <blockquote>
-        Supporting enforcement and asking it to do better are not opposites. Mutual respect is the basis for
-        collaboration.
-        <span class="zh" lang="zh-Hant">相互尊重是合作的基礎。</span>
-      </blockquote>
+      <div class="btn-row">
+        <a class="btn" href="#sign"><T en="Add your name" zh="加入連署" /></a>
+        <a class="btn ghost" href="#statement"><T en="Read the petition" zh="閱讀請願書" /></a>
+      </div>
     </div>
   </section>
 
   <section id="sign" class="sign-section">
     <div class="narrow">
-      <p class="eyebrow">Add your name</p>
-      <h2>Sign the petition</h2>
+      <p class="eyebrow"><T en="Add your name" zh="加入連署" /></p>
+      <h2><T en="Sign the petition" zh="連署請願" /></h2>
+      <p class="summary">
+        <T
+          en="In short: we ask for fair treatment for Eva Xie, respectful reform of how ICE interacts with the public, and mutual respect between all people and countries, especially the United States and China."
+          zh="簡而言之：我們請求公平對待謝翌；以尊重的方式改革美國移民及海關執法局（ICE）與民眾互動的方式；並促進所有人民與國家之間，特別是美中之間的相互尊重。"
+        />
+        <a href="#statement"><T en="Read the full petition." zh="閱讀完整請願書。" /></a>
+      </p>
 
       <div id="sign-closed" class="card notice" hidden>
-        <h3>Online signing opens soon</h3>
+        <h3><T en="Online signing opens soon" zh="線上連署即將開放" /></h3>
         <p class="muted">
-          We are finishing the setup. In the meantime, you can add your name by emailing
+          <T en="In the meantime, you can add your name by emailing" zh="在此之前，您可以寫信加入連署：" />
           <a href={`mailto:${site.links.email}?subject=${encodeURIComponent('Sign the petition')}`}>{site.links.email}</a>.
         </p>
       </div>
 
       <form id="sign-form" class="card sign-form" novalidate>
         <div class="field">
-          <label for="f-name">Full name <span class="req">required</span></label>
+          <label for="f-name"><T en="Full name" zh="姓名" /> <span class="req"><T en="required" zh="必填" /></span></label>
           <input id="f-name" name="name" type="text" autocomplete="name" maxlength="80" required />
         </div>
         <div class="field">
-          <label for="f-email">Email <span class="opt">optional</span></label>
+          <label for="f-email"><T en="Email" zh="電子郵件" /> <span class="opt"><T en="optional" zh="選填" /></span></label>
           <input id="f-email" name="email" type="email" autocomplete="email" maxlength="254" />
-          <p class="hint">Add it to get a confirmation email and a link to remove your signature later. Your email is never shown publicly or shared.</p>
+          <p class="hint"><T en="Add it to get a confirmation email and a link to remove your signature later. Your email is never shown publicly or shared." zh="填寫後可收到確認信，以及日後撤回連署的連結。您的電子郵件絕不會公開或分享。" /></p>
         </div>
         <div class="field">
-          <label for="f-phone">Phone <span class="opt">optional</span></label>
+          <label for="f-phone"><T en="Phone" zh="電話" /> <span class="opt"><T en="optional" zh="選填" /></span></label>
           <input id="f-phone" name="phone" type="tel" autocomplete="tel" maxlength="30" />
-          <p class="hint">Only the campaign team sees it, to reach you about the campaign if needed. Never shown publicly or shared.</p>
+          <p class="hint"><T en="Only the campaign team sees it, to reach you about the campaign if needed. Never shown publicly or shared." zh="僅供活動團隊在必要時與您聯繫。絕不會公開或分享。" /></p>
         </div>
 
-        <p class="opt-head">Everything below is optional, but it helps us show lawmakers and the university who is behind this.</p>
+        <p class="opt-head"><T en="Everything below is optional, but it helps us show lawmakers and the university who is behind this." zh="以下皆為選填，但能幫助我們向議員和大學展示支持者是誰。" /></p>
         <div class="field-row">
           <div class="field">
-            <label for="f-city">City or town</label>
-            <input id="f-city" name="city" type="text" autocomplete="address-level2" maxlength="80" placeholder="e.g. Princeton" />
+            <label for="f-city"><T en="City or town" zh="城市" /></label>
+            <input id="f-city" name="city" type="text" autocomplete="address-level2" maxlength="80" placeholder="e.g. Princeton" data-zh-placeholder="例如：Princeton" />
           </div>
           <div class="field">
-            <label for="f-state">State</label>
+            <label for="f-state"><T en="State" zh="州" /></label>
             <select id="f-state" name="state" autocomplete="address-level1">
-              <option value="">Choose…</option>
+              <option value="" data-zh="請選擇…">Choose…</option>
               {states.map((st) => <option value={st}>{st}</option>)}
-              <option value="Outside the U.S.">Outside the U.S.</option>
+              <option value="Outside the U.S." data-zh="美國境外">Outside the U.S.</option>
             </select>
           </div>
           <div class="field zip">
-            <label for="f-zip">ZIP code</label>
+            <label for="f-zip"><T en="ZIP code" zh="郵遞區號" /></label>
             <input id="f-zip" name="zip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="10" />
           </div>
         </div>
-        <p class="hint">State and ZIP let us tell each member of Congress how many of their constituents signed. Your ZIP code is never shown publicly.</p>
+        <p class="hint"><T en="State and ZIP let us tell each member of Congress how many of their constituents signed. Your ZIP code is never shown publicly." zh="州和郵遞區號讓我們能告訴每位國會議員有多少選民連署。您的郵遞區號絕不會公開。" /></p>
 
         <div class="field-row two">
           <div class="field">
-            <label for="f-aff">Princeton connection</label>
+            <label for="f-aff"><T en="Princeton connection" zh="與普林斯頓的關係" /></label>
             <select id="f-aff" name="affiliation">
-              <option value="">Choose…</option>
-              <option value="student">Princeton student</option>
-              <option value="faculty_staff">Princeton faculty or staff</option>
-              <option value="alum">Princeton alum</option>
-              <option value="community">Community member</option>
-              <option value="unaffiliated">Unaffiliated</option>
+              <option value="" data-zh="請選擇…">Choose…</option>
+              {affiliations.map(([v, en, zh]) => <option value={v} data-zh={zh}>{en}</option>)}
             </select>
           </div>
           <div class="field">
-            <label for="f-heard">How did you hear about this?</label>
+            <label for="f-heard"><T en="How did you hear about this?" zh="您如何得知這份請願？" /></label>
             <select id="f-heard" name="heardFrom">
-              <option value="">Choose…</option>
-              <option value="qr">QR code (shirt, poster, sticker)</option>
-              <option value="social">Social media</option>
-              <option value="rally">Rally or event</option>
-              <option value="friend">Friend or colleague</option>
-              <option value="news">News story</option>
-              <option value="email">Email or group chat</option>
-              <option value="other">Other</option>
+              <option value="" data-zh="請選擇…">Choose…</option>
+              {heard.map(([v, en, zh]) => <option value={v} data-zh={zh}>{en}</option>)}
             </select>
           </div>
         </div>
 
         <div class="field">
-          <label for="f-comment">Why I'm signing</label>
+          <label for="f-comment"><T en="Why I'm signing" zh="我連署的原因" /></label>
           <textarea id="f-comment" name="comment" rows="3" maxlength="500"></textarea>
-          <p class="hint">Up to 500 characters. Not posted automatically. If you sign publicly, we may quote it with your name.</p>
+          <p class="hint"><T en="Up to 500 characters. Not posted automatically. If you sign publicly, we may quote it with your name." zh="最多 500 字。不會自動公開。若您選擇公開連署，我們可能會連同您的姓名引用。" /></p>
         </div>
 
         <fieldset class="field privacy">
-          <legend>Show my signature</legend>
+          <legend><T en="Show my signature" zh="顯示我的連署" /></legend>
           <label class="choice">
             <input type="radio" name="public" value="true" checked />
-            <span><strong>Publicly.</strong> Show my name (and city and state, if given) on the list of signers below.</span>
+            <span><strong><T en="Publicly." zh="公開。" /></strong> <T en="Show my name (and city and state, if given) on the list of signers." zh="在連署名單中顯示我的姓名（以及城市和州，如有填寫）。" /></span>
           </label>
           <label class="choice">
             <input type="radio" name="public" value="false" />
-            <span><strong>Privately.</strong> Count my signature, but do not show my name anywhere.</span>
+            <span><strong><T en="Privately." zh="不公開。" /></strong> <T en="Count my signature, but do not show my name anywhere." zh="計入連署人數，但不在任何地方顯示我的姓名。" /></span>
           </label>
         </fieldset>
 
         <label class="choice check">
           <input type="checkbox" name="agree" required />
-          <span>I have read and agree with the petition above.</span>
+          <span><T en="I have read and agree with the petition." zh="我已閱讀並同意這份請願書。" /> <a href="#statement"><T en="Read it" zh="閱讀" /></a></span>
         </label>
         <label class="choice check">
           <input type="checkbox" name="updates" />
-          <span>You may contact me with campaign updates by email or phone. <span class="muted">(optional)</span></span>
+          <span><T en="You may contact me with campaign updates by email or phone." zh="您可以透過電子郵件或電話告知我活動的最新消息。" /> <span class="muted"><T en="(optional)" zh="（選填）" /></span></span>
         </label>
 
         <!-- Spam trap: hidden from people, filled in by bots. -->
@@ -212,35 +185,199 @@ const states = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado',
         <div id="turnstile-box"></div>
 
         <p id="form-error" class="form-error" role="alert" hidden></p>
-        <button class="btn" type="submit" id="sign-btn">Sign the petition</button>
+        <button class="btn" type="submit" id="sign-btn"><T en="Sign the petition" zh="送出連署" /></button>
         <p class="hint">
-          We record your name, the time you signed and anything else you fill in. If you give an email, you can
-          remove your signature at any time with the link in your confirmation email, or write to us.
+          <T
+            en="We record your name, the time you signed and anything else you fill in. If you give an email, you can remove your signature at any time with the link in your confirmation email, or write to us."
+            zh="我們會記錄您的姓名、連署時間及您填寫的其他資料。若您提供電子郵件，可隨時透過確認信中的連結撤回連署，或寫信給我們。"
+          />
         </p>
       </form>
 
       <div id="sign-done" class="card done" hidden tabindex="-1">
-        <p class="eyebrow">Thank you</p>
-        <h3 id="done-title">You signed the petition.</h3>
+        <p class="eyebrow"><T en="Thank you" zh="謝謝您" /></p>
+        <h3 id="done-title"></h3>
         <p id="done-time" class="muted"></p>
         <p id="done-email" class="muted"></p>
-        <p>The next step is the most powerful one: share it with one more person.</p>
-        <div class="btn-row">
-          <button class="btn" type="button" id="share-btn">Share the petition</button>
-          <a class="btn ghost" href="/free-eva/#act">More ways to help</a>
+        <p><T en="The next step is the most powerful one: share it with one more person." zh="下一步最有力量：分享給至少一個人。" /></p>
+        <div class="share-row">
+          {shares.map((s) => (
+            <a class={`share share-${s.id}`} href={s.href} target="_blank" rel="noopener">
+              {s.labelZh ? <T en={s.label} zh={s.labelZh} /> : s.label}
+            </a>
+          ))}
+          <button type="button" class="share share-wechat" data-wechat><T en="WeChat" zh="微信" /></button>
+          <button type="button" class="share" data-copy><T en="Copy link" zh="複製連結" /></button>
         </div>
+        <div class="wechat-box" hidden>
+          <img src="/img/petition-qr.svg" alt="QR code for evaxie.us/petition" width="160" height="160" />
+          <p class="small muted"><T en="Open WeChat, tap + then Scan, and share the page to a chat or Moments." zh="打開微信，點「+」再點「掃一掃」，即可把頁面分享到聊天或朋友圈。" /></p>
+        </div>
+        <div class="btn-row">
+          <a class="btn ghost" href="/free-eva/#act"><T en="More ways to help" zh="更多支持方式" /></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="statement">
+    <div class="narrow petition-text">
+      <p class="eyebrow"><T en="The petition" zh="請願書" /></p>
+
+      <div class="en-only">
+        <h2>Fair treatment, respectful enforcement, mutual respect</h2>
+        <p class="muted small salutation">
+          To the President of the United States and the Cabinet; the Executive branch, including U.S. Immigration
+          and Customs Enforcement, the Department of Justice and the immigration courts; the Judicial branch,
+          including the federal courts; and our elected representatives in Congress:
+        </p>
+        <p>
+          We write on behalf of Eva Xie, and of every student and scholar who comes here to learn and contribute.
+          We are students, scholars, neighbors and friends from many countries. We support the lawful mission of
+          immigration enforcement and respect the officers who carry it out. We ask only that this power be used
+          with judgment, transparency and basic dignity, because that is how enforcement earns the public's trust.
+        </p>
+        <p>
+          On November 19, 2026, Eva Xie, a PhD student in neuroscience at Princeton University, was detained by
+          ICE at Ronald Reagan Washington National Airport as she returned from Neuroscience 2026, the annual
+          meeting of the Society for Neuroscience. Eva came to the United States with her family at age 14 and
+          has lived here since. She is a student and a researcher, not a threat.
+        </p>
+
+        <h3>We respectfully ask:</h3>
+        <ol class="asks">
+          <li>
+            <strong>Fair treatment for Eva Xie.</strong>
+            That she be treated with dignity and humane care while in custody; that she have prompt and
+            regular access to her attorney, her family and her university; that her case be reviewed quickly
+            and fairly; and that she be released to continue her studies while it is decided.
+          </li>
+          <li>
+            <strong>Reform of how ICE interacts with the public.</strong>
+            That officers identify themselves and clearly explain why a person is being stopped or held, in a
+            language they understand; that detention be a last resort for people with deep community ties who
+            pose no danger; that families, attorneys, consulates and universities be notified promptly; and
+            that every person be treated with dignity, whatever their status.
+          </li>
+          <li>
+            <strong>Mutual respect between all people and countries, especially the United States and China.</strong>
+            That students and scholars be welcomed as bridges between nations, not treated as suspects
+            because of where they were born; and that our government show visitors the same respect we expect
+            for Americans who study, work and travel abroad.
+          </li>
+        </ol>
+
+        <h3>Of each branch of government, we ask:</h3>
+        <ul class="branches">
+          <li>
+            <strong>The White House and the Executive branch.</strong>
+            Set clear, published standards for how ICE and CBP treat students, scholars and visitors in valid
+            status, and see that they are followed: use discretion, explain every stop and detention, ensure
+            prompt access to counsel and consulates, and keep detention a last resort. Review Eva's case
+            promptly and use the discretion the law already provides to release her while it is decided.
+          </li>
+          <li>
+            <strong>The Judicial branch.</strong>
+            We respect the independence of the courts and ask only for what the law promises everyone: that
+            Eva's case, and every case like hers, be heard promptly and fairly, with full due process and
+            meaningful access to counsel.
+          </li>
+          <li>
+            <strong>Congress.</strong>
+            Exercise oversight of how immigration enforcement treats students and scholars, and support clear
+            guidance on access to counsel, timely notice to families and universities, and alternatives to
+            detention.
+          </li>
+        </ul>
+      </div>
+
+      <div class="zh-only" lang="zh-Hant">
+        <h2>公平對待・尊重執法・相互尊重</h2>
+        <p class="muted small salutation">
+          致美國總統及內閣；行政部門，包括美國移民及海關執法局、司法部及移民法庭；司法部門，包括聯邦法院；以及我們在國會的民選代表：
+        </p>
+        <p>
+          我們為謝翌發聲，也為每一位來到這裡學習與貢獻的學生和學者發聲。我們是來自許多國家的學生、學者、鄰居與朋友。我們支持移民執法的合法使命，也尊重執行這項工作的執法人員。我們只請求這份權力在行使時，能秉持判斷、保持透明，並維護基本的人性尊嚴，因為這正是執法贏得公眾信任的方式。
+        </p>
+        <p>
+          2026 年 11 月 19 日，普林斯頓大學神經科學博士生謝翌（Eva Xie）參加美國神經科學學會年會（Neuroscience 2026）後返程時，在雷根華盛頓國家機場遭美國移民及海關執法局拘留。謝翌 14 歲時隨家人來到美國，此後一直在這裡生活。她是一名學生和研究者，不是威脅。
+        </p>
+
+        <h3>我們謹此請求：</h3>
+        <ol class="asks">
+          <li>
+            <strong>公平對待謝翌。</strong>
+            在拘留期間以尊嚴和人道的方式對待她；讓她能及時並定期與律師、家人及大學聯繫；迅速而公正地審理她的案件；並在案件裁決期間釋放她，讓她繼續學業。
+          </li>
+          <li>
+            <strong>改革移民及海關執法局與民眾互動的方式。</strong>
+            執法人員應表明身分，並以當事人理解的語言，清楚說明攔查或拘留的原因；對於與社區聯繫深厚、且不構成危險的人，拘留應是最後手段；應及時通知家屬、律師、領事館及大學；並且不論身分，都應以尊嚴對待每一個人。
+          </li>
+          <li>
+            <strong>所有人民與國家之間的相互尊重，特別是美國與中國之間。</strong>
+            歡迎學生和學者成為國家之間的橋樑，而不是因出生地而被視為嫌疑人；並請我們的政府以我們期望美國人在海外求學、工作和旅行時所受到的同樣尊重，對待來訪的客人。
+          </li>
+        </ol>
+
+        <h3>我們向各政府部門請求：</h3>
+        <ul class="branches">
+          <li>
+            <strong>白宮與行政部門。</strong>
+            針對移民及海關執法局與海關及邊境保護局如何對待持有效身分的學生、學者和訪客，制定並公布明確標準，並確保落實：審慎行使裁量權、說明每一次攔查與拘留的原因、確保及時獲得律師和領事協助，並將拘留作為最後手段。請迅速審查謝翌的案件，並運用法律已賦予的裁量權，在案件裁決期間釋放她。
+          </li>
+          <li>
+            <strong>司法部門。</strong>
+            我們尊重法院的獨立，只請求法律對每個人所承諾的：謝翌的案件，以及所有類似的案件，都能得到迅速、公正的審理，享有完整的正當程序和實質的律師協助。
+          </li>
+          <li>
+            <strong>國會。</strong>
+            監督移民執法如何對待學生和學者，並支持就律師協助、及時通知家屬和大學，以及拘留的替代方案，制定明確的指引。
+          </li>
+        </ul>
+        <p class="small muted">此為中文譯本，以英文版本為準。</p>
+      </div>
+
+      <blockquote>
+        <span class="en-only">Supporting enforcement and asking it to do better are not opposites. Mutual respect is the basis for collaboration.</span>
+        <span class="zh" lang="zh-Hant">相互尊重是合作的基礎。</span>
+      </blockquote>
+      <div class="btn-row">
+        <a class="btn" href="#sign"><T en="Add your name" zh="加入連署" /></a>
       </div>
     </div>
   </section>
 
   <section id="signers">
     <div class="narrow">
-      <p class="eyebrow">Signers</p>
-      <h2>Who has signed</h2>
-      <p class="muted small" id="signers-note">Signers who chose to be listed publicly, newest first. Signers who chose privacy are counted in the total but not shown.</p>
+      <p class="eyebrow"><T en="Signers" zh="連署人" /></p>
+      <h2><T en="Who has signed" zh="已連署的人" /></h2>
+      <p class="muted small"><T en="Signers who chose to be listed publicly, newest first. Signers who chose privacy are counted in the total but not shown." zh="選擇公開的連署人，依時間由新到舊排列。選擇不公開的連署人計入總數，但不會顯示。" /></p>
       <ul id="signer-list" class="signer-list"></ul>
-      <p id="signers-empty" class="muted" hidden>Be the first to sign publicly.</p>
-      <button class="btn ghost" type="button" id="more-btn" hidden>Show more</button>
+      <p id="signers-empty" class="muted" hidden><T en="Be the first to sign publicly." zh="成為第一位公開連署的人。" /></p>
+      <button class="btn ghost" type="button" id="more-btn" hidden><T en="Show more" zh="顯示更多" /></button>
+    </div>
+  </section>
+
+  <section id="spread">
+    <div class="narrow spread">
+      <div>
+        <p class="eyebrow"><T en="Spread the word" zh="幫忙傳播" /></p>
+        <h2><T en="Share the petition" zh="分享請願" /></h2>
+        <p class="muted"><T en="Every share brings in new signers. Print the QR code for posters, rallies and tables." zh="每一次分享都能帶來新的連署人。可列印 QR 碼用於海報、集會和攤位。" /></p>
+        <div class="share-row">
+          {shares.map((s) => (
+            <a class={`share share-${s.id}`} href={s.href} target="_blank" rel="noopener">
+              {s.labelZh ? <T en={s.label} zh={s.labelZh} /> : s.label}
+            </a>
+          ))}
+          <button type="button" class="share" data-copy><T en="Copy link" zh="複製連結" /></button>
+        </div>
+        <p class="small"><a href="/img/petition-qr.png" download="evaxie-petition-qr.png"><T en="Download the QR code (PNG)" zh="下載 QR 碼（PNG）" /></a> · <a href="/img/petition-qr.svg" download="evaxie-petition-qr.svg">SVG</a></p>
+      </div>
+      <figure class="qr">
+        <img src="/img/petition-qr.svg" alt="QR code for evaxie.us/petition" width="180" height="180" />
+        <figcaption class="small muted"><T en="Scan to sign · WeChat friendly" zh="掃碼連署・可用微信掃描" /></figcaption>
+      </figure>
     </div>
   </section>
 </Base>
@@ -249,6 +386,7 @@ const states = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado',
   type Signer = { name: string; city: string | null; state?: string | null; signedAt: string };
   type PetitionData = { ready: boolean; count: number; signers: Signer[]; nextCursor: number | null; turnstileSiteKey: string | null };
 
+  const GOAL = Number(document.getElementById('goal-bar')?.getAttribute('aria-valuemax')) || 1000;
   const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
   const form = $<HTMLFormElement>('sign-form');
   const errorEl = $('form-error');
@@ -258,12 +396,75 @@ const states = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado',
   let cursor: number | null = null;
   let turnstileWidget: string | undefined;
 
+  // ---------- language ----------
+  let lang: 'en' | 'zh' = 'en';
+  const STRINGS = {
+    en: {
+      name: 'Please enter your name.',
+      email: 'Please enter a valid email address.',
+      agree: 'Please tick the box to confirm you agree with the petition.',
+      network: 'We could not reach the server. Check your connection and try again.',
+      generic: 'Something went wrong. Please try again.',
+      signing: 'Signing…',
+      thanks: (first: string) => `Thank you, ${first}. You signed the petition.`,
+      signedPublic: (t: string) => `Signed ${t}. Your name is on the public list.`,
+      signedPrivate: (t: string) => `Signed ${t}. Your signature is private: it is counted but not shown.`,
+      emailSent: (e: string) => `A confirmation email is on its way to ${e}.`,
+      copied: 'Link copied',
+    },
+    zh: {
+      name: '請填寫您的姓名。',
+      email: '請填寫有效的電子郵件地址。',
+      agree: '請勾選方框，確認您同意這份請願書。',
+      network: '無法連線到伺服器，請檢查網路後再試一次。',
+      generic: '發生錯誤，請再試一次。',
+      signing: '送出中…',
+      thanks: (first: string) => `謝謝您，${first}。您已完成連署。`,
+      signedPublic: (t: string) => `連署時間：${t}。您的姓名已列入公開名單。`,
+      signedPrivate: (t: string) => `連署時間：${t}。您選擇不公開：已計入人數，但不會顯示姓名。`,
+      emailSent: (e: string) => `確認信已寄往 ${e}。`,
+      copied: '已複製連結',
+    },
+  };
+  const t = () => STRINGS[lang];
+
+  function setLang(next: 'en' | 'zh', save = true) {
+    lang = next;
+    document.documentElement.dataset.plang = next;
+    document.querySelectorAll<HTMLButtonElement>('[data-setlang]').forEach((b) =>
+      b.setAttribute('aria-pressed', String(b.dataset.setlang === next)),
+    );
+    document.querySelectorAll<HTMLElement>('[data-zh]').forEach((el) => {
+      if (el.dataset.en === undefined) el.dataset.en = el.textContent || '';
+      el.textContent = next === 'zh' ? el.dataset.zh! : el.dataset.en!;
+    });
+    document.querySelectorAll<HTMLInputElement>('[data-zh-placeholder]').forEach((el) => {
+      if (el.dataset.enPlaceholder === undefined) el.dataset.enPlaceholder = el.placeholder;
+      el.placeholder = next === 'zh' ? el.dataset.zhPlaceholder! : el.dataset.enPlaceholder!;
+    });
+    if (save) try { localStorage.setItem('petition-lang', next); } catch { /* ignore */ }
+  }
+  document.querySelectorAll<HTMLButtonElement>('[data-setlang]').forEach((b) =>
+    b.addEventListener('click', () => setLang(b.dataset.setlang as 'en' | 'zh')),
+  );
+  {
+    const params = new URLSearchParams(location.search);
+    let initial = params.get('lang');
+    if (!initial) try { initial = localStorage.getItem('petition-lang'); } catch { /* ignore */ }
+    if (!initial && navigator.language?.toLowerCase().startsWith('zh')) initial = 'zh';
+    if (initial === 'zh') setLang('zh', false);
+    if (params.get('src') === 'qr') ($<HTMLSelectElement>('f-heard')).value = 'qr';
+  }
+
+  // ---------- count, goal and list ----------
   const fmtTime = (iso: string) =>
-    new Date(iso).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+    new Date(iso).toLocaleString(lang === 'zh' ? 'zh-TW' : undefined, { dateStyle: 'medium', timeStyle: 'short' });
 
   function setCount(n: number) {
-    $('sig-count').textContent = n.toLocaleString();
-    $('sig-count-label').textContent = n === 1 ? 'person has signed' : 'people have signed';
+    $('sig-count').textContent = n.toLocaleString('en-US');
+    const pct = Math.min(100, (n / GOAL) * 100);
+    $('goal-fill').style.width = `${Math.max(pct, n > 0 ? 1.5 : 0)}%`;
+    $('goal-bar').setAttribute('aria-valuenow', String(n));
   }
 
   function addSigners(signers: Signer[], prepend = false) {
@@ -280,10 +481,10 @@ const states = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado',
         city.textContent = place;
         li.append(city);
       }
-      const t = document.createElement('time');
-      t.dateTime = s.signedAt;
-      t.textContent = fmtTime(s.signedAt);
-      li.append(t);
+      const time = document.createElement('time');
+      time.dateTime = s.signedAt;
+      time.textContent = fmtTime(s.signedAt);
+      li.append(time);
       prepend ? list.prepend(li) : list.append(li);
     }
     $('signers-empty').hidden = list.children.length > 0;
@@ -308,7 +509,6 @@ const states = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado',
       cursor = data.nextCursor;
       moreBtn.hidden = !cursor;
     } catch {
-      // API not reachable (for example `astro dev` without the Worker). Keep the form visible.
       $('signers-empty').hidden = false;
     }
   }
@@ -319,34 +519,36 @@ const states = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado',
     s.async = true;
     s.onload = () => {
       // @ts-ignore turnstile is a global from the script above
-      turnstileWidget = window.turnstile.render('#turnstile-box', { sitekey: siteKey, theme: 'dark' });
+      turnstileWidget = window.turnstile.render('#turnstile-box', { sitekey: siteKey, theme: 'dark', language: lang === 'zh' ? 'zh-tw' : 'auto' });
     };
     document.head.append(s);
   }
 
+  // ---------- signing ----------
   function showError(msg: string, field?: string) {
     errorEl.textContent = msg;
     errorEl.hidden = false;
     if (field) (form.elements.namedItem(field) as HTMLElement | null)?.focus();
   }
 
+  const btnLabel = btn.innerHTML;
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     errorEl.hidden = true;
     const fd = new FormData(form);
     const name = String(fd.get('name') || '').trim();
     const email = String(fd.get('email') || '').trim();
-    if (name.length < 2) return showError('Please enter your name.', 'name');
-    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return showError('Please enter a valid email address.', 'email');
-    if (!fd.get('agree')) return showError('Please tick the box to confirm you agree with the petition.', 'agree');
+    if (name.length < 2) return showError(t().name, 'name');
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return showError(t().email, 'email');
+    if (!fd.get('agree')) return showError(t().agree, 'agree');
 
     const payload = {
       name,
       email,
+      phone: String(fd.get('phone') || '').trim(),
       city: String(fd.get('city') || '').trim(),
       state: String(fd.get('state') || ''),
       zip: String(fd.get('zip') || '').trim(),
-      phone: String(fd.get('phone') || '').trim(),
       affiliation: String(fd.get('affiliation') || ''),
       heardFrom: String(fd.get('heardFrom') || ''),
       comment: String(fd.get('comment') || '').trim(),
@@ -355,10 +557,11 @@ const states = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado',
       updates: Boolean(fd.get('updates')),
       website: String(fd.get('website') || ''),
       turnstileToken: String(fd.get('cf-turnstile-response') || ''),
+      lang,
     };
 
     btn.disabled = true;
-    btn.textContent = 'Signing…';
+    btn.textContent = t().signing;
     try {
       const res = await fetch('/api/petition/sign', {
         method: 'POST',
@@ -367,7 +570,7 @@ const states = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado',
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.ok) {
-        showError(data.error || 'Something went wrong. Please try again.', data.field);
+        showError(data.error || t().generic, data.field);
         // @ts-ignore
         if (turnstileWidget !== undefined) window.turnstile?.reset(turnstileWidget);
         return;
@@ -375,38 +578,66 @@ const states = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado',
       form.hidden = true;
       const done = $('sign-done');
       done.hidden = false;
-      $('done-title').textContent = `Thank you, ${name.split(' ')[0]}. You signed the petition.`;
-      $('done-time').textContent = `Signed ${fmtTime(data.signedAt)}. ${payload.public ? 'Your name is on the public list below.' : 'Your signature is private: it is counted but not shown.'}`;
-      $('done-email').textContent = data.emailQueued ? `A confirmation email is on its way to ${email}.` : '';
+      $('done-title').textContent = t().thanks(name.split(' ')[0]);
+      const when = fmtTime(data.signedAt);
+      $('done-time').textContent = payload.public ? t().signedPublic(when) : t().signedPrivate(when);
+      $('done-email').textContent = data.emailQueued ? t().emailSent(email) : '';
       if (typeof data.count === 'number') setCount(data.count);
       if (payload.public) addSigners([{ name, city: payload.city || null, state: payload.state || null, signedAt: data.signedAt }], true);
       done.focus();
     } catch {
-      showError('We could not reach the server. Check your connection and try again.');
+      showError(t().network);
     } finally {
       btn.disabled = false;
-      btn.textContent = 'Sign the petition';
+      btn.innerHTML = btnLabel;
     }
   });
 
-  $('share-btn').addEventListener('click', async () => {
-    const url = `${location.origin}/petition/`;
-    const text = 'I signed the petition for fair treatment for Eva Xie and mutual respect. Add your name:';
-    if (navigator.share) {
-      try { await navigator.share({ title: 'Free Eva petition', text, url }); } catch { /* cancelled */ }
-    } else {
-      await navigator.clipboard?.writeText(url);
-      $('share-btn').textContent = 'Link copied';
-    }
-  });
+  // ---------- sharing ----------
+  const shareUrl = `${location.origin}/petition/`;
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((b) =>
+    b.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        const old = b.innerHTML;
+        b.textContent = t().copied;
+        setTimeout(() => (b.innerHTML = old), 2000);
+      } catch { /* clipboard blocked */ }
+    }),
+  );
+  document.querySelectorAll<HTMLButtonElement>('[data-wechat]').forEach((b) =>
+    b.addEventListener('click', () => {
+      const box = b.closest('.done')?.querySelector<HTMLElement>('.wechat-box');
+      if (box) box.hidden = !box.hidden;
+    }),
+  );
 
   moreBtn.addEventListener('click', () => load(true));
   load();
 </script>
 
+<style is:global>
+  .zh-only { display: none; }
+  html[data-plang='zh'] .zh-only { display: revert; }
+  html[data-plang='zh'] .en-only { display: none; }
+</style>
+
 <style>
-  .count-line { margin: 1.4rem 0 0; display: flex; align-items: baseline; gap: 0.6rem; flex-wrap: wrap; min-height: 2.6rem; }
+  .lang-row { display: flex; gap: 0.4rem; justify-content: flex-end; margin-bottom: 1rem; }
+  .lang-btn {
+    font: inherit; font-size: 0.9rem; cursor: pointer; padding: 0.3rem 0.8rem; border-radius: 999px;
+    background: transparent; color: var(--muted); border: 1px solid var(--line);
+  }
+  .lang-btn[aria-pressed='true'] { background: var(--orange); border-color: var(--orange); color: var(--black); font-weight: 700; }
+
+  .goal { margin-top: 1.4rem; max-width: 40rem; }
+  .count-line { margin: 0 0 0.5rem; display: flex; align-items: baseline; gap: 0.6rem; flex-wrap: wrap; min-height: 2.6rem; }
   .count-num { font-family: var(--font-stencil); color: var(--orange); font-size: clamp(2rem, 5vw, 2.8rem); line-height: 1; }
+  .bar { height: 12px; border-radius: 999px; background: var(--panel); border: 1px solid var(--line); overflow: hidden; }
+  .bar span { display: block; height: 100%; width: 0; background: var(--orange); transition: width 0.8s ease; }
+  .delivery { margin: 0.6rem 0 0; }
+
+  .summary { font-size: 1.05rem; margin-bottom: 1.4rem; }
 
   .petition-text p, .petition-text li { font-size: 1.1rem; }
   .petition-text h3 { margin-top: 2rem; }
@@ -447,6 +678,22 @@ const states = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado',
   .done { border-top: 4px solid var(--orange); }
   .done .btn { cursor: pointer; font-size: 1rem; }
   .notice { border-top: 4px solid var(--orange); }
+
+  .share-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+  .share {
+    font: inherit; font-size: 0.95rem; font-weight: 600; cursor: pointer; text-decoration: none;
+    padding: 0.55rem 0.95rem; border-radius: 4px; border: 1px solid var(--line); background: var(--black); color: var(--white);
+  }
+  .share:hover { border-color: var(--orange); color: var(--orange); }
+  .share-whatsapp { border-color: #25d366; }
+  .share-wechat { border-color: #07c160; }
+  .wechat-box { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.5rem; }
+  .wechat-box img, .qr img { background: #fff; padding: 8px; border-radius: 6px; }
+
+  .spread { display: grid; gap: 1.5rem; align-items: center; }
+  @media (min-width: 720px) { .spread { grid-template-columns: 1fr auto; } }
+  .qr { margin: 0; text-align: center; }
+  .qr figcaption { margin-top: 0.4rem; }
 
   .signer-list { list-style: none; padding: 0; margin: 1.2rem 0; display: grid; gap: 0; }
   .signer-list :global(li) {

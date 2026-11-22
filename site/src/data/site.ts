@@ -19,6 +19,15 @@ export const site = {
     alt: 'Free Eva 釋放謝翌',
   },
 
+  // Petition goal and delivery plan, shown on /petition/.
+  petition: {
+    goal: 1000,
+    // TODO: set the delivery date once confirmed, e.g. 'December 10, 2026'. While null the page says
+    // the date will be announced.
+    deliveryDate: null as string | null,
+    deliveryDateZh: null as string | null, // e.g. '2026年12月10日'
+  },
+
   // Links the campaign has not published yet. Leave as null until real.
   links: {
     petition: '/petition/' as string | null,

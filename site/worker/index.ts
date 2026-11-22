@@ -5,6 +5,8 @@
 //   POST /api/petition/sign     -> record a signature, send a confirmation email
 //   POST /api/petition/remove   -> delete a signature using the token from the email
 //   GET  /api/petition/export   -> all signers for the Google Sheet sync (needs EXPORT_TOKEN)
+//   GET  /api/petition/admin/signers, POST /api/petition/admin/visibility
+//                               -> hide or show public names (needs ADMIN_TOKEN, or EXPORT_TOKEN)
 //
 // Bindings and settings (see wrangler.jsonc and site/PETITION.md):
 //   DB                    D1 database (required for signing)
@@ -28,6 +30,7 @@ interface Env {
   RESEND_API_KEY?: string;
   IP_SALT?: string;
   EXPORT_TOKEN?: string;
+  ADMIN_TOKEN?: string;
 }
 
 // Minimal D1 types so this file needs no extra dev dependency.
@@ -75,6 +78,7 @@ const COLUMNS = `
   phone TEXT,
   city TEXT, state TEXT, zip TEXT, affiliation TEXT, comment TEXT, heard_from TEXT,
   is_public INTEGER NOT NULL DEFAULT 0,
+  hidden INTEGER NOT NULL DEFAULT 0,
   wants_updates INTEGER NOT NULL DEFAULT 0,
   signed_at TEXT NOT NULL,
   manage_token TEXT NOT NULL UNIQUE,
@@ -102,9 +106,13 @@ async function ensureSchema(db: D1Database): Promise<void> {
       db.prepare('ALTER TABLE signatures_v2 RENAME TO signatures'),
       ...indexes,
     ]);
-  } else if (!cols.some((c) => c.name === 'phone')) {
+  } else {
+    const adds: D1PreparedStatement[] = [];
     // 0003: optional phone number.
-    await db.batch([db.prepare('ALTER TABLE signatures ADD COLUMN phone TEXT')]);
+    if (!cols.some((c) => c.name === 'phone')) adds.push(db.prepare('ALTER TABLE signatures ADD COLUMN phone TEXT'));
+    // 0004: campaign can hide a public name (spam or abuse) without deleting the signature.
+    if (!cols.some((c) => c.name === 'hidden')) adds.push(db.prepare('ALTER TABLE signatures ADD COLUMN hidden INTEGER NOT NULL DEFAULT 0'));
+    if (adds.length) await db.batch(adds);
   }
   schemaReady = true;
 }
@@ -117,6 +125,8 @@ export default {
     try {
       if (env.DB) await ensureSchema(env.DB);
       if (url.pathname === '/api/petition/export' && request.method === 'GET') return await exportAll(request, env);
+      if (url.pathname === '/api/petition/admin/signers' && request.method === 'GET') return await adminList(request, env);
+      if (url.pathname === '/api/petition/admin/visibility' && request.method === 'POST') return await adminVisibility(request, env);
       if (url.pathname === '/api/petition' && request.method === 'GET') return await getPetition(url, env);
       if (url.pathname === '/api/petition/sign' && request.method === 'POST') return await sign(request, env, ctx);
       if (url.pathname === '/api/petition/remove' && request.method === 'POST') return await remove(request, env);
@@ -138,7 +148,7 @@ async function getPetition(url: URL, env: Env): Promise<Response> {
   const countRow = await env.DB.prepare('SELECT COUNT(*) AS n FROM signatures').first<{ n: number }>();
   const rows = await env.DB.prepare(
     `SELECT id, name, city, state, signed_at FROM signatures
-     WHERE is_public = 1 ${cursor ? 'AND id < ?1' : ''}
+     WHERE is_public = 1 AND hidden = 0 ${cursor ? 'AND id < ?1' : ''}
      ORDER BY id DESC LIMIT ${PAGE_SIZE + 1}`,
   )
     .bind(...(cursor ? [cursor] : []))
@@ -273,6 +283,34 @@ async function exportAll(request: Request, env: Env): Promise<Response> {
       wantsUpdates: r.wants_updates === 1,
     })),
   });
+}
+
+// ---------- admin: hide / show public names ----------
+
+function isAdmin(request: Request, env: Env): boolean {
+  const token = env.ADMIN_TOKEN || env.EXPORT_TOKEN;
+  return Boolean(token) && request.headers.get('authorization') === `Bearer ${token}`;
+}
+
+async function adminList(request: Request, env: Env): Promise<Response> {
+  if (!isAdmin(request, env)) return json({ error: 'Unauthorized' }, 401);
+  if (!env.DB) return json({ error: 'No database' }, 503);
+  const rows = await env.DB.prepare(
+    `SELECT id, name, city, state, signed_at, hidden FROM signatures WHERE is_public = 1 ORDER BY id DESC LIMIT 500`,
+  ).all<{ id: number; name: string; city: string | null; state: string | null; signed_at: string; hidden: number }>();
+  return json({
+    signers: rows.results.map((r) => ({ id: r.id, name: r.name, city: r.city, state: r.state, signedAt: r.signed_at, hidden: r.hidden === 1 })),
+  });
+}
+
+async function adminVisibility(request: Request, env: Env): Promise<Response> {
+  if (!isAdmin(request, env)) return json({ error: 'Unauthorized' }, 401);
+  if (!env.DB) return json({ error: 'No database' }, 503);
+  const body = await readBody(request);
+  const id = Number(body?.id);
+  if (!Number.isInteger(id) || id < 1) return json({ error: 'Bad id' }, 400);
+  await env.DB.prepare('UPDATE signatures SET hidden = ?1 WHERE id = ?2').bind(truthy(body?.hidden) ? 1 : 0, id).run();
+  return json({ ok: true });
 }
 
 // ---------- Email ----------
