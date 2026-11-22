@@ -1,0 +1,337 @@
+{
+ "v": 3,
+ "createdOnFiles": {
+  "v": 1,
+  "at": "2026-11-22T03:29:53Z"
+ },
+ "title": "Free Eva Rally T-Shirt Concepts",
+ "launch": {
+  "view": "canvas",
+  "page": "final"
+ },
+ "pages": [
+  {
+   "id": "round1",
+   "name": "Round 1"
+  },
+  {
+   "id": "merged",
+   "name": "Merged · 9 mockups"
+  },
+  {
+   "id": "dateless",
+   "name": "Round 3 · Dateless + QR"
+  },
+  {
+   "id": "scripts",
+   "name": "Script comparison"
+  },
+  {
+   "id": "final",
+   "name": "Final"
+  }
+ ],
+ "boards": {
+  "Main.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1240,
+   "h": 720,
+   "title": "Concept 1 · Clean bilingual"
+  },
+  "Concept2-GridCells.dc.html": {
+   "x": 1320,
+   "y": 0,
+   "w": 1240,
+   "h": 720,
+   "title": "Concept 2 · Grid cells"
+  },
+  "Concept3-NameCredential.dc.html": {
+   "x": 0,
+   "y": 840,
+   "w": 1240,
+   "h": 720,
+   "title": "Concept 3 · Name and credential"
+  },
+  "Concept4-Handshake.dc.html": {
+   "x": 1320,
+   "y": 840,
+   "w": 1240,
+   "h": 720,
+   "title": "Concept 4 · Handshake"
+  },
+  "Concept5-OneWord.dc.html": {
+   "x": 0,
+   "y": 1680,
+   "w": 1240,
+   "h": 720,
+   "title": "Concept 5 · One-word punch"
+  },
+  "Merged-1.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1240,
+   "h": 720,
+   "title": "Merged 1 · Black · stacked",
+   "page": "merged"
+  },
+  "Merged-2.dc.html": {
+   "x": 1320,
+   "y": 0,
+   "w": 1240,
+   "h": 720,
+   "title": "Merged 2 · Black · grid cells",
+   "page": "merged"
+  },
+  "Merged-3.dc.html": {
+   "x": 2640,
+   "y": 0,
+   "w": 1240,
+   "h": 720,
+   "title": "Merged 3 · White · black and orange",
+   "page": "merged"
+  },
+  "Merged-4.dc.html": {
+   "x": 0,
+   "y": 840,
+   "w": 1240,
+   "h": 720,
+   "title": "Merged 4 · Orange · all black",
+   "page": "merged"
+  },
+  "Merged-5.dc.html": {
+   "x": 1320,
+   "y": 840,
+   "w": 1240,
+   "h": 720,
+   "title": "Merged 5 · Black · left-chest front",
+   "page": "merged"
+  },
+  "Merged-6.dc.html": {
+   "x": 2640,
+   "y": 840,
+   "w": 1240,
+   "h": 720,
+   "title": "Merged 6 · Black · fountain hero",
+   "page": "merged"
+  },
+  "Merged-7.dc.html": {
+   "x": 0,
+   "y": 1680,
+   "w": 1240,
+   "h": 720,
+   "title": "Merged 7 · Black · vertical Chinese",
+   "page": "merged"
+  },
+  "Merged-8.dc.html": {
+   "x": 1320,
+   "y": 1680,
+   "w": 1240,
+   "h": 720,
+   "title": "Merged 8 · Heather grey · black and orange",
+   "page": "merged"
+  },
+  "Merged-9.dc.html": {
+   "x": 2640,
+   "y": 1680,
+   "w": 1240,
+   "h": 720,
+   "title": "Merged 9 · Black · ultra-minimal",
+   "page": "merged"
+  },
+  "Dateless-1.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1240,
+   "h": 720,
+   "title": "Dateless 1 · Black · stencil Chinese",
+   "page": "dateless"
+  },
+  "Dateless-2.dc.html": {
+   "x": 1320,
+   "y": 0,
+   "w": 1240,
+   "h": 720,
+   "title": "Dateless 2 · Black · worn print",
+   "page": "dateless"
+  },
+  "Dateless-3.dc.html": {
+   "x": 2640,
+   "y": 0,
+   "w": 1240,
+   "h": 720,
+   "title": "Dateless 3 · White · stencil Chinese",
+   "page": "dateless"
+  },
+  "Dateless-4.dc.html": {
+   "x": 0,
+   "y": 840,
+   "w": 1240,
+   "h": 720,
+   "title": "Dateless 4 · Orange · black stencil",
+   "page": "dateless"
+  },
+  "Dateless-5.dc.html": {
+   "x": 1320,
+   "y": 840,
+   "w": 1240,
+   "h": 720,
+   "title": "Dateless 5 · Heather grey · stencil",
+   "page": "dateless"
+  },
+  "Dateless-6.dc.html": {
+   "x": 2640,
+   "y": 840,
+   "w": 1240,
+   "h": 720,
+   "title": "Dateless 6 · Black · left-chest, worn",
+   "page": "dateless"
+  },
+  "Domain-Options.dc.html": {
+   "x": 0,
+   "y": 1680,
+   "w": 1240,
+   "h": 720,
+   "title": "Domain options",
+   "page": "dateless"
+  },
+  "Script-1-Simplified-1911.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1240,
+   "h": 720,
+   "title": "A · Simplified characters, 1911 print style (current)",
+   "page": "scripts"
+  },
+  "Script-2-Traditional-1911.dc.html": {
+   "x": 1320,
+   "y": 0,
+   "w": 1240,
+   "h": 720,
+   "title": "B · Traditional characters, 1911 print style",
+   "page": "scripts"
+  },
+  "Script-3-PRC-poster.dc.html": {
+   "x": 2640,
+   "y": 0,
+   "w": 1240,
+   "h": 720,
+   "title": "C · Simplified characters, PRC-era poster style",
+   "page": "scripts"
+  },
+  "Script-4-Simplified-noflags.dc.html": {
+   "x": 0,
+   "y": 840,
+   "w": 1240,
+   "h": 720,
+   "title": "A2 · Simplified, 1911 print style, no flags",
+   "page": "scripts"
+  },
+  "Script-5-Traditional-noflags.dc.html": {
+   "x": 1320,
+   "y": 840,
+   "w": 1240,
+   "h": 720,
+   "title": "B2 · Traditional, 1911 print style, no flags",
+   "page": "scripts"
+  },
+  "Script-6-Traditional-noflags-prompt.dc.html": {
+   "x": 2640,
+   "y": 840,
+   "w": 1240,
+   "h": 720,
+   "title": "B2 · URL as a terminal prompt",
+   "page": "scripts"
+  },
+  "Script-7-Traditional-noflags-green.dc.html": {
+   "x": 0,
+   "y": 1680,
+   "w": 1240,
+   "h": 720,
+   "title": "B2 · URL in terminal green",
+   "page": "scripts"
+  },
+  "Script-8-Traditional-noflags-greenprompt.dc.html": {
+   "x": 1320,
+   "y": 1680,
+   "w": 1240,
+   "h": 720,
+   "title": "B2 · Green terminal prompt",
+   "page": "scripts"
+  },
+  "Final-Shirt.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1240,
+   "h": 720,
+   "title": "Final · Free Eva rally shirt",
+   "page": "final"
+  }
+ },
+ "order": [
+  "Main.dc.html",
+  "Concept2-GridCells.dc.html",
+  "Concept3-NameCredential.dc.html",
+  "Concept4-Handshake.dc.html",
+  "Concept5-OneWord.dc.html",
+  "Merged-1.dc.html",
+  "Merged-2.dc.html",
+  "Merged-3.dc.html",
+  "Merged-4.dc.html",
+  "Merged-5.dc.html",
+  "Merged-6.dc.html",
+  "Merged-7.dc.html",
+  "Merged-8.dc.html",
+  "Merged-9.dc.html",
+  "Dateless-1.dc.html",
+  "Dateless-2.dc.html",
+  "Dateless-3.dc.html",
+  "Dateless-4.dc.html",
+  "Dateless-5.dc.html",
+  "Dateless-6.dc.html",
+  "Domain-Options.dc.html",
+  "Script-1-Simplified-1911.dc.html",
+  "Script-2-Traditional-1911.dc.html",
+  "Script-3-PRC-poster.dc.html",
+  "Script-4-Simplified-noflags.dc.html",
+  "Script-5-Traditional-noflags.dc.html",
+  "Script-6-Traditional-noflags-prompt.dc.html",
+  "Script-7-Traditional-noflags-green.dc.html",
+  "Script-8-Traditional-noflags-greenprompt.dc.html",
+  "Final-Shirt.dc.html"
+ ],
+ "notes": {
+  "hdr": {
+   "x": 0,
+   "y": -300,
+   "text": "Free Eva rally: T-shirt concepts (front + back)",
+   "kind": "title1",
+   "maxW": 2560
+  },
+  "hdr2": {
+   "x": 0,
+   "y": -300,
+   "text": "Free Eva rally: merged bilingual concept, 9 mockups",
+   "kind": "title1",
+   "maxW": 3880,
+   "page": "merged"
+  },
+  "hdr3": {
+   "x": 0,
+   "y": -300,
+   "text": "Round 3: dateless, simpler back, QR placeholder",
+   "kind": "title1",
+   "maxW": 3880,
+   "page": "dateless"
+  },
+  "hdr4": {
+   "x": 0,
+   "y": -300,
+   "text": "Script comparison: simplified 1911 vs traditional 1911 vs PRC poster",
+   "kind": "title1",
+   "maxW": 3880,
+   "page": "scripts"
+  }
+ },
+ "designSystems": []
+}
