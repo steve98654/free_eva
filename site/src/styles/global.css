@@ -123,3 +123,11 @@ blockquote {
   .tab { padding: 0.45rem 0.7rem; }
   .tab-en { font-size: 0.92rem; }
 }
+
+/* Home hero: the 中 / US mark as a quiet emblem on wide screens */
+.home-hero-wrap { position: relative; }
+.hero-mark { display: none; }
+@media (min-width: 1120px) {
+  .hero-mark { display: block; position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: min(30vw, 380px); height: auto; opacity: 0.95; pointer-events: none; }
+  .home-hero-wrap .lede { max-width: 58%; }
+}

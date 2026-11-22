@@ -11,12 +11,12 @@ export const site = {
   tagline: 'A student is not a threat. Mutual respect is the basis for collaboration.',
   respectZh: '中美相互尊重',
 
-  // LOGO: no logo has been chosen yet. To swap one in, drop the file in
+  // LOGO: 中 / US yin-yang with the 13-star ring (see Website/logo-final). To swap it, drop a file in
   // /public/img/ and set `src` (for example '/img/logo-horizontal-dark.svg').
-  // While `src` is null the header shows a text placeholder.
+  // Set `src` to null to show the text placeholder instead.
   logo: {
-    src: null as string | null,
-    alt: 'Free Eva',
+    src: '/img/logo-header.svg' as string | null,
+    alt: 'Free Eva 釋放謝翌',
   },
 
   // Links the campaign has not published yet. Leave as null until real.
