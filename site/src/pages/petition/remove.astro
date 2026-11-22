@@ -1,0 +1,60 @@
+---
+import Base from '../../layouts/Base.astro';
+import { site } from '../../data/site';
+---
+<Base title="Remove your signature" description="Remove your signature from the Free Eva petition.">
+  <section class="page-hero">
+    <div class="narrow">
+      <p class="eyebrow">Petition</p>
+      <h1>Remove your signature</h1>
+      <div id="rm-ask">
+        <p class="lede">This permanently deletes your name, email and signing time from our petition records.</p>
+        <p id="rm-error" class="rm-error" role="alert" hidden></p>
+        <div class="btn-row">
+          <button class="btn" type="button" id="rm-btn">Remove my signature</button>
+          <a class="btn ghost" href="/petition/">Keep it</a>
+        </div>
+      </div>
+      <div id="rm-done" hidden>
+        <p class="lede">Your signature has been removed. If this was a mistake, you are welcome to <a href="/petition/#sign">sign again</a>.</p>
+      </div>
+      <p class="muted small">Need help? Write to <a href={`mailto:${site.links.email}`}>{site.links.email}</a>.</p>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const token = new URLSearchParams(location.search).get('t') || '';
+  const btn = document.getElementById('rm-btn') as HTMLButtonElement;
+  const err = document.getElementById('rm-error') as HTMLElement;
+  if (!token) {
+    err.textContent = 'This link is missing its code. Please use the link from your confirmation email.';
+    err.hidden = false;
+    btn.disabled = true;
+  }
+  btn.addEventListener('click', async () => {
+    btn.disabled = true;
+    err.hidden = true;
+    try {
+      const res = await fetch('/api/petition/remove', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ token }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Something went wrong. Please try again.');
+      (document.getElementById('rm-ask') as HTMLElement).hidden = true;
+      (document.getElementById('rm-done') as HTMLElement).hidden = false;
+    } catch (e) {
+      err.textContent = (e as Error).message;
+      err.hidden = false;
+      btn.disabled = false;
+    }
+  });
+</script>
+
+<style>
+  .narrow h1 { font-size: clamp(2.2rem, 6vw, 3.6rem); }
+  .btn { cursor: pointer; }
+  .rm-error { color: #ffb4a8; border-left: 4px solid #ff6a4d; padding: 0.5rem 0.8rem; background: color-mix(in srgb, #ff4d2e 14%, transparent); }
+</style>

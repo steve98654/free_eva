@@ -1,6 +1,8 @@
 # evaxie.us — Free Eva campaign site
 
-Astro static site. Four tabs: **Home**, **Free Eva** (`/free-eva/`), **Mutual Respect** (`/mutual-respect/`), **US–China** (`/us-china/`).
+Astro static site served by a Cloudflare Worker (`worker/index.ts`). Tabs: **Home**, **Free Eva** (`/free-eva/`), **Petition** (`/petition/`), **Mutual Respect** (`/mutual-respect/`), **US–China** (`/us-china/`), **Shop** (`/shop/`), **Contact** (`/contact/`).
+
+The Petition tab stores signatures in Cloudflare D1 and emails a confirmation. Setup steps: [PETITION.md](PETITION.md).
 
 ```sh
 cd site
@@ -19,4 +21,4 @@ npm run build    # static output in site/dist/
 Black `#151515`, Princeton orange `#E77500`, white. Fonts from Google Fonts: Black Ops One and Big Shoulders Stencil Display (stencil), Noto Serif TC (Chinese), Inter (body). Tokens are in `src/styles/global.css`.
 
 ## Deploying
-`site/dist/` is plain static files; any static host works (Netlify, Vercel, Cloudflare Pages, GitHub Pages) with base directory `site`, build command `npm run build`, output `dist`.
+Cloudflare Workers Builds (project `free-eva`): root directory `site`, build `npm run build`, deploy `npx wrangler deploy`. `wrangler.jsonc` serves `dist/` as static assets and routes `/api/*` to the Worker.

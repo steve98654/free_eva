@@ -1,11 +1,39 @@
-// Cloudflare Workers deploy config for evaxie.us (static Astro site).
+// Cloudflare Workers deploy config for evaxie.us.
 // Workers Builds settings: root directory `site`, build command `npm run build`,
 // deploy command `npx wrangler deploy`.
+//
+// The Worker (worker/index.ts) serves the static Astro build and the petition API
+// under /api/*. Petition setup steps are in PETITION.md.
 {
   "name": "free-eva",
+  "main": "worker/index.ts",
   "compatibility_date": "2026-11-01",
   "assets": {
     "directory": "./dist",
-    "not_found_handling": "404-page"
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*"]
+  },
+  "observability": { "enabled": true },
+
+  // Public settings. Secrets (RESEND_API_KEY, TURNSTILE_SECRET_KEY, IP_SALT) are NOT kept here:
+  // add them in the Cloudflare dashboard (Worker > Settings > Variables and Secrets, type "Secret").
+  "vars": {
+    "SITE_URL": "https://evaxie.us",
+    "EMAIL_FROM": "Free Eva <petition@evaxie.us>",
+    "EMAIL_REPLY_TO": "weare@geodesic.pro",
+    // Turnstile site key (public). Leave empty to skip the spam check.
+    "TURNSTILE_SITE_KEY": ""
   }
+
+  // PETITION DATABASE: uncomment once the D1 database exists (see PETITION.md step 1).
+  // Until then the petition page shows the statement and "signing opens soon".
+  // ,"d1_databases": [
+  //   {
+  //     "binding": "DB",
+  //     "database_name": "free-eva-petition",
+  //     "database_id": "PASTE-DATABASE-ID-HERE",
+  //     "migrations_dir": "migrations"
+  //   }
+  // ]
 }
