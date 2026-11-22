@@ -56,6 +56,18 @@ const graphics = [
   </section>
 
   <section>
+    <div class="narrow">
+      <figure class="poem">
+        <blockquote>
+          <p class="poem-zh" lang="zh-Hant">床前明月光，疑是地上霜。<br />舉頭望明月，低頭思故鄉。</p>
+          <p class="poem-en">Before my bed, bright moonlight,<br />like frost upon the ground.<br />I raise my head to see the moon,<br />and lower it, thinking of home.</p>
+        </blockquote>
+        <figcaption>Li Bai <span lang="zh-Hant">李白</span>, <cite lang="zh-Hant">靜夜思</cite> (<cite>Quiet Night Thoughts</cite>), Tang dynasty</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section>
     <div class="wrap">
       <p class="eyebrow">What we are asking</p>
       <h2>Our asks</h2>
@@ -152,6 +164,12 @@ const graphics = [
   .facts dt { font-family: var(--font-display); font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--orange); }
   .facts dd { margin: 0; }
   @media (max-width: 520px) { .facts { grid-template-columns: 1fr; gap: 0.15rem; } .facts dd { margin-bottom: 0.7rem; } }
+  .poem { margin: 0; text-align: center; }
+  .poem blockquote { border-left: 0; border-top: 3px solid var(--orange); border-bottom: 3px solid var(--orange); padding: 1.75rem 1.25rem; margin: 0; }
+  .poem-zh { font-family: var(--font-zh); font-weight: 600; font-size: clamp(1.35rem, 4.2vw, 1.9rem); letter-spacing: 0.12em; line-height: 1.8; color: var(--orange); margin: 0 0 1rem; }
+  .poem-en { font-style: italic; line-height: 1.6; margin: 0; }
+  .poem figcaption { margin-top: 0.8rem; font-size: 0.9rem; opacity: 0.8; }
+  .poem cite { font-style: normal; }
   .kit-intro { max-width: 60ch; }
   .kit { list-style: none; padding: 0; margin: 2rem 0 0; display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
   .kit .card { display: flex; flex-direction: column; }
