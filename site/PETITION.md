@@ -17,7 +17,7 @@ Emails are never exposed by the API.
 ## 1. Database (required)
 1. Cloudflare dashboard > Storage & Databases > D1 > **Create database**, name `free-eva-petition`.
 2. Open it > **Console**, paste the contents of `migrations/0001_petition_signatures.sql`, run it.
-3. Copy the database ID, then in `wrangler.jsonc` uncomment the `d1_databases` block and paste the ID.
+3. Copy the database ID into the `d1_databases` block in `wrangler.jsonc` (done: free-eva-petition is connected).
    Commit to the production branch; Workers Builds redeploys.
 
 ## 2. Spam check with Turnstile (recommended)
