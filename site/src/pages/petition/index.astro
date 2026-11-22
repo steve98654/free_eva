@@ -123,6 +123,11 @@ const states = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado',
           <input id="f-email" name="email" type="email" autocomplete="email" maxlength="254" />
           <p class="hint">Add it to get a confirmation email and a link to remove your signature later. Your email is never shown publicly or shared.</p>
         </div>
+        <div class="field">
+          <label for="f-phone">Phone <span class="opt">optional</span></label>
+          <input id="f-phone" name="phone" type="tel" autocomplete="tel" maxlength="30" />
+          <p class="hint">Only the campaign team sees it, to reach you about the campaign if needed. Never shown publicly or shared.</p>
+        </div>
 
         <p class="opt-head">Everything below is optional, but it helps us show lawmakers and the university who is behind this.</p>
         <div class="field-row">
@@ -195,7 +200,7 @@ const states = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado',
         </label>
         <label class="choice check">
           <input type="checkbox" name="updates" />
-          <span>Email me occasional campaign updates. <span class="muted">(needs an email above)</span></span>
+          <span>You may contact me with campaign updates by email or phone. <span class="muted">(optional)</span></span>
         </label>
 
         <!-- Spam trap: hidden from people, filled in by bots. -->
@@ -340,6 +345,7 @@ const states = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado',
       city: String(fd.get('city') || '').trim(),
       state: String(fd.get('state') || ''),
       zip: String(fd.get('zip') || '').trim(),
+      phone: String(fd.get('phone') || '').trim(),
       affiliation: String(fd.get('affiliation') || ''),
       heardFrom: String(fd.get('heardFrom') || ''),
       comment: String(fd.get('comment') || '').trim(),
@@ -423,11 +429,11 @@ const states = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado',
   .field-row + .hint { margin-top: -0.6rem; }
   textarea { resize: vertical; min-height: 5rem; }
   select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%); background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%; background-size: 5px 5px; background-repeat: no-repeat; padding-right: 2rem !important; }
-  input[type='text'], input[type='email'], select, textarea {
+  input[type='text'], input[type='email'], input[type='tel'], select, textarea {
     font: inherit; color: var(--white); background-color: var(--black); border: 1px solid var(--line);
     border-radius: 4px; padding: 0.7rem 0.8rem; width: 100%;
   }
-  input[type='text']:focus, input[type='email']:focus, select:focus, textarea:focus { outline: 2px solid var(--orange); outline-offset: 1px; border-color: var(--orange); }
+  input[type='text']:focus, input[type='email']:focus, input[type='tel']:focus, select:focus, textarea:focus { outline: 2px solid var(--orange); outline-offset: 1px; border-color: var(--orange); }
   .hint { font-size: 0.88rem; color: var(--muted); margin: 0; }
   .privacy { gap: 0.55rem; }
   .privacy legend { margin-bottom: 0.4rem; }

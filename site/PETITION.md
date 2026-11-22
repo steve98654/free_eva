@@ -9,7 +9,7 @@ Steps 2 and 3 are optional: without them signing still works, there is just no s
 
 ## What gets stored
 One row per signature in the `signatures` table. Required: name and signing time (UTC, set
-automatically). Optional: email (lowercased), city, state, ZIP, Princeton connection, how they heard,
+automatically). Optional: email (lowercased), phone, city, state, ZIP, Princeton connection, how they heard,
 "why I'm signing" comment, whether they want campaign updates. Also stored: public or private choice,
 a secret removal token, a salted hash of the IP (rate limiting and duplicate checks only), and email
 delivery status.
@@ -46,8 +46,9 @@ Emails come from `EMAIL_FROM` (`Free Eva <petition@evaxie.us>`) with replies goi
 ## 4. Daily Google Sheet of signers
 `google-sheet/petition-sync.gs` is a Google Apps Script that pulls every signer from
 `/api/petition/export` and rewrites a "Signers" tab once a day (name, date, time, public?, city,
-state, ZIP, Princeton connection, how they heard, comment, wants updates). Emails are left out
-unless you set `INCLUDE_EMAIL = true` in the script.
+state, ZIP, Princeton connection, how they heard, comment, wants updates), plus email and phone
+so the team can contact signers. Set `INCLUDE_CONTACT = false` in the script to leave them out.
+Keep the sheet shared only with the campaign team.
 1. Worker `free-eva` > Settings > Variables and Secrets > add **Secret** `EXPORT_TOKEN` with a long
    random string. The export endpoint is off until this exists.
 2. Open the Google Sheet > Extensions > Apps Script, paste the script, add Script Property
