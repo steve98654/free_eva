@@ -71,6 +71,7 @@ const COLUMNS = `
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
   email TEXT UNIQUE,
+  phone TEXT,
   city TEXT, state TEXT, zip TEXT, affiliation TEXT, comment TEXT, heard_from TEXT,
   is_public INTEGER NOT NULL DEFAULT 0,
   wants_updates INTEGER NOT NULL DEFAULT 0,
@@ -100,6 +101,9 @@ async function ensureSchema(db: D1Database): Promise<void> {
       db.prepare('ALTER TABLE signatures_v2 RENAME TO signatures'),
       ...indexes,
     ]);
+  } else if (!cols.some((c) => c.name === 'phone')) {
+    // 0003: optional phone number.
+    await db.batch([db.prepare('ALTER TABLE signatures ADD COLUMN phone TEXT')]);
   }
   schemaReady = true;
 }
@@ -167,6 +171,7 @@ async function sign(request: Request, env: Env, ctx: ExecutionContext): Promise<
 
   const name = clean(body.name, 80);
   const email = clean(body.email, 254).toLowerCase();
+  const phone = clean(body.phone, 30) || null;
   const city = clean(body.city, 80) || null;
   const state = clean(body.state, 40) || null;
   const zip = clean(body.zip, 12) || null;
@@ -178,6 +183,7 @@ async function sign(request: Request, env: Env, ctx: ExecutionContext): Promise<
 
   if (name.length < 2) return json({ error: 'Please enter your name.', field: 'name' }, 400);
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return json({ error: 'Please enter a valid email address.', field: 'email' }, 400);
+  if (phone && !/^[+()\-.\s\d]{7,30}$/.test(phone)) return json({ error: 'Please check your phone number.', field: 'phone' }, 400);
   if (!truthy(body.agree)) return json({ error: 'Please tick the box to confirm you agree with the petition.', field: 'agree' }, 400);
 
   const ip = request.headers.get('cf-connecting-ip') || '';
@@ -210,12 +216,12 @@ async function sign(request: Request, env: Env, ctx: ExecutionContext): Promise<
   const signedAt = new Date().toISOString();
   const token = randomToken();
   await env.DB.prepare(
-    `INSERT INTO signatures (name, email, city, state, zip, affiliation, comment, heard_from,
+    `INSERT INTO signatures (name, email, phone, city, state, zip, affiliation, comment, heard_from,
                              is_public, wants_updates, signed_at, manage_token, ip_hash)
-     VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)`,
+     VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14)`,
   )
-    .bind(name, email || null, city, state, zip, affiliation, comment, heardFrom,
-      isPublic ? 1 : 0, wantsUpdates && email ? 1 : 0, signedAt, token, ipHash)
+    .bind(name, email || null, phone, city, state, zip, affiliation, comment, heardFrom,
+      isPublic ? 1 : 0, wantsUpdates && (email || phone) ? 1 : 0, signedAt, token, ipHash)
     .run();
 
   const emailing = Boolean(email && env.RESEND_API_KEY && env.EMAIL_FROM);
@@ -245,7 +251,7 @@ async function exportAll(request: Request, env: Env): Promise<Response> {
   if (!env.EXPORT_TOKEN || auth !== `Bearer ${env.EXPORT_TOKEN}`) return json({ error: 'Unauthorized' }, 401);
   if (!env.DB) return json({ error: 'No database' }, 503);
   const rows = await env.DB.prepare(
-    `SELECT id, name, email, city, state, zip, affiliation, comment, heard_from, is_public, wants_updates, signed_at
+    `SELECT id, name, email, phone, city, state, zip, affiliation, comment, heard_from, is_public, wants_updates, signed_at
      FROM signatures ORDER BY id ASC`,
   ).all<Record<string, unknown>>();
   return json({
@@ -256,6 +262,7 @@ async function exportAll(request: Request, env: Env): Promise<Response> {
       signedAt: r.signed_at,
       public: r.is_public === 1,
       email: r.email,
+      phone: r.phone,
       city: r.city,
       state: r.state,
       zip: r.zip,

@@ -13,8 +13,8 @@
 
 const EXPORT_URL = 'https://evaxie.us/api/petition/export';
 const SHEET_NAME = 'Signers';
-// Emails are left out of the sheet by default. Set to true to include them.
-const INCLUDE_EMAIL = false;
+// Email and phone are included so the team can contact signers. Set to false to leave them out.
+const INCLUDE_CONTACT = true;
 
 function setup() {
   ScriptApp.getProjectTriggers()
@@ -42,8 +42,8 @@ function syncSignatures() {
   const tz = ss.getSpreadsheetTimeZone();
 
   const header = ['#', 'Name', 'Signed (date)', 'Signed (time)', 'Public?', 'City', 'State', 'ZIP',
-    'Princeton connection', 'How they heard', 'Why I\'m signing', 'Wants updates?'];
-  if (INCLUDE_EMAIL) header.splice(5, 0, 'Email');
+    'Princeton connection', 'How they heard', 'Why I\'m signing', 'OK to contact?'];
+  if (INCLUDE_CONTACT) header.splice(5, 0, 'Email', 'Phone');
 
   const rows = data.signers.map((s, i) => {
     const d = new Date(s.signedAt);
@@ -61,7 +61,7 @@ function syncSignatures() {
       s.comment || '',
       s.wantsUpdates ? 'Yes' : '',
     ];
-    if (INCLUDE_EMAIL) row.splice(5, 0, s.email || '');
+    if (INCLUDE_CONTACT) row.splice(5, 0, s.email || '', s.phone || '');
     return row;
   });
 
