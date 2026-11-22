@@ -3,6 +3,33 @@ import Base from '../layouts/Base.astro';
 import Placeholder from '../components/Placeholder.astro';
 import { site } from '../data/site';
 const { links } = site;
+const d = '/downloads/swag/';
+const swag = [
+  { title: 'Hoodies and long sleeves', thumb: '/img/shop/shirt-mockup.webp', dark: true,
+    note: 'Same front and back as the shirt, for winter. Add these styles to the same Bonfire campaign.',
+    vendor: 'Bonfire', files: [['Front', '/downloads/shirt-print-front.png'], ['Back', '/downloads/shirt-print-back.png']] },
+  { title: 'Laptop stickers', thumb: '/downloads/thumbs/sticker-round.webp', dark: false,
+    note: 'Seen in every class and meeting for months. 3 or 4 inch round, die cut.',
+    vendor: 'Sticker Mule', files: [['PNG', '/downloads/sticker-round.png'], ['SVG', '/downloads/sticker-round.svg']] },
+  { title: 'Buttons', thumb: d + 'thumbs/button-orange.webp', dark: true,
+    note: 'Cheap and quick to hand out at a rally. 2.25 inch round, in orange or black.',
+    vendor: 'Sticker Mule', files: [['Orange', d + 'button-orange.svg'], ['Black', d + 'button-black.svg']] },
+  { title: 'Enamel pin', thumb: d + 'thumbs/enamel-pin.webp', dark: true,
+    note: 'A thank-you for donors and volunteers. 1.25 inch, black and orange enamel with gold metal.',
+    vendor: 'Sticker Mule or any pin maker', files: [['SVG', d + 'enamel-pin.svg'], ['PNG', d + 'enamel-pin.png']] },
+  { title: 'Tote bags', thumb: d + 'thumbs/tote-black-ink.webp', dark: false,
+    note: 'A campus favorite. One ink: black on natural canvas, or orange on black.',
+    vendor: 'Bonfire, Custom Ink or Printful', files: [['Black ink', d + 'tote-black-ink.png'], ['Orange ink', d + 'tote-orange-ink.png'], ['SVG', d + 'tote-black-ink.svg']] },
+  { title: 'Hats', thumb: d + 'thumbs/hat-front-embroidery.webp', dark: true,
+    note: 'Embroidered emblem on the front, FREE EVA on the back. Stars are enlarged so the stitching holds.',
+    vendor: 'Custom Ink or any embroiderer', files: [['Front', d + 'hat-front-embroidery.svg'], ['Back', d + 'hat-back-embroidery.svg']] },
+  { title: 'Pens', thumb: d + 'thumbs/pen-imprint.webp', dark: false,
+    note: 'For tabling and sign-in sheets. One color, FREE EVA · evaxie.us.',
+    vendor: '4imprint or Vistaprint', files: [['SVG', d + 'pen-imprint.svg'], ['PNG', d + 'pen-imprint.png']] },
+  { title: 'Phone and video backgrounds', thumb: d + 'thumbs/video-background-dark.webp', dark: true,
+    note: 'Free. Use them on your phone and in every Zoom or Teams meeting.',
+    vendor: null, files: [['Phone', d + 'wallpaper-phone.png'], ['Video (dark)', d + 'video-background-dark.png'], ['Video (light)', d + 'video-background-light.png']] },
+];
 ---
 <Base title="Shop · Free Eva" description="Wear the Free Eva shirt. Every shirt is printed on demand, and proceeds support the campaign to bring Eva home.">
   <section class="page-hero">
@@ -42,6 +69,28 @@ const { links } = site;
     </div>
   </section>
 
+  <section id="swag">
+    <div class="wrap">
+      <p class="eyebrow">More swag</p>
+      <h2>Stickers, pins, totes and more</h2>
+      <p class="muted kit-intro">
+        Each item has print-ready files you can send to the suggested printer. Ordering for a group, a lab or a rally?
+        Email <a href={`mailto:${links.email}`}>{links.email}</a> so we can coordinate.
+      </p>
+      <ul class="swag">
+        {swag.map((g) => (
+          <li class="card">
+            <div class:list={['thumb', { light: !g.dark }]}><img src={g.thumb} alt="" loading="lazy" /></div>
+            <h3>{g.title}</h3>
+            <p class="muted">{g.note}</p>
+            <p class="vendor">{g.vendor ? <>Print with: <strong>{g.vendor}</strong></> : <strong>Free download</strong>}</p>
+            <p class="dl">{g.files.map(([label, href]) => <a href={href} download>{label}</a>)}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
   <section>
     <div class="wrap">
       <p class="eyebrow">How it works</p>
@@ -72,4 +121,14 @@ const { links } = site;
   @media (min-width: 960px) { .product { grid-template-columns: 1.4fr 1fr; } }
   .btn.disabled { opacity: 0.55; cursor: default; pointer-events: none; }
   .dl { display: flex; gap: 1rem; flex-wrap: wrap; font-weight: 700; }
+  .kit-intro { max-width: 62ch; }
+  .swag { list-style: none; padding: 0; margin: 2rem 0 0; display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+  .swag .card { display: flex; flex-direction: column; }
+  .swag h3 { margin: 0.9rem 0 0.25rem; font-size: 1.05rem; }
+  .swag .muted { font-size: 0.9rem; margin: 0 0 0.6rem; }
+  .vendor { font-size: 0.85rem; margin: 0 0 0.75rem; }
+  .thumb { display: grid; place-items: center; aspect-ratio: 4 / 3; background: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 0.75rem; }
+  .thumb.light { background: #fff; }
+  .thumb img { max-width: 100%; max-height: 100%; object-fit: contain; }
+  .swag .dl { margin-top: auto; }
 </style>
