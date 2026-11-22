@@ -3,8 +3,8 @@ import '../styles/global.css';
 import Logo from '../components/Logo.astro';
 import { site, tabs } from '../data/site';
 
-interface Props { title?: string; description?: string }
-const { title, description = site.tagline } = Astro.props;
+interface Props { title?: string; description?: string; noindex?: boolean }
+const { title, description = site.tagline, noindex = false } = Astro.props;
 const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · ${site.nameZh}`;
 const path = Astro.url.pathname.replace(/\/?$/, '/');
 const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
@@ -17,6 +17,7 @@ const ogImage = new URL('/img/og-image.png', Astro.site).href;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

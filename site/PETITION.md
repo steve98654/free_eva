@@ -30,8 +30,12 @@ Emails are never exposed by the API.
 
 ## 2. Spam check with Turnstile (recommended)
 1. Dashboard > Turnstile > **Add widget**, hostname `evaxie.us`, mode Managed.
-2. Put the **site key** in `wrangler.jsonc` > `vars.TURNSTILE_SITE_KEY` (it is public).
-3. Worker `free-eva` > Settings > Variables and Secrets > add **Secret** `TURNSTILE_SECRET_KEY`.
+2. Worker `free-eva` > Settings > Variables and Secrets: add **Text** `TURNSTILE_SITE_KEY` (the site key)
+   and **Secret** `TURNSTILE_SECRET_KEY`. `keep_vars` in `wrangler.jsonc` keeps dashboard values on deploy.
+
+### Hiding a public name
+Go to `/petition/admin/`, enter `EXPORT_TOKEN` (or `ADMIN_TOKEN` if set), and click Hide next to a name.
+The signature still counts and stays in the database and sheet; only the public listing is hidden.
 
 ## 3. Confirmation email with Resend
 1. Create an account at resend.com > Domains > **Add domain** `evaxie.us`, and add the DNS records it
@@ -53,6 +57,10 @@ Keep the sheet shared only with the campaign team.
    random string. The export endpoint is off until this exists.
 2. Open the Google Sheet > Extensions > Apps Script, paste the script, add Script Property
    `EXPORT_TOKEN` with the same string, then run `setup` once and approve.
+
+## Goal and delivery date
+`src/data/site.ts` > `petition`: `goal` (1000) and `deliveryDate` / `deliveryDateZh`. While the date is
+null the page says it will be announced.
 
 ## Reading the signatures
 Dashboard > D1 > `free-eva-petition` > Console, for example:

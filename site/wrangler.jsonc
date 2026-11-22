@@ -21,10 +21,11 @@
   "vars": {
     "SITE_URL": "https://evaxie.us",
     "EMAIL_FROM": "Free Eva <petition@evaxie.us>",
-    "EMAIL_REPLY_TO": "weare@geodesic.pro",
-    // Turnstile site key (public). Leave empty to skip the spam check.
-    "TURNSTILE_SITE_KEY": ""
-  }
+    "EMAIL_REPLY_TO": "weare@geodesic.pro"
+    // TURNSTILE_SITE_KEY is set in the Cloudflare dashboard (Worker > Settings > Variables, type Text).
+    // keep_vars below stops deploys from removing it.
+  },
+  "keep_vars": true
 
   // Petition database (D1). Schema: migrations/. See PETITION.md.
   ,"d1_databases": [

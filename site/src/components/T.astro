@@ -1,0 +1,7 @@
+---
+// Bilingual text for pages with an English / 中文 toggle (see petition/index.astro).
+// Renders both; CSS shows one based on <html data-plang>.
+interface Props { en: string; zh: string }
+const { en, zh } = Astro.props;
+---
+<span class="en-only">{en}</span><span class="zh-only" lang="zh-Hant">{zh}</span>
