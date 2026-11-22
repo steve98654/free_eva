@@ -25,7 +25,7 @@ export const site = {
     legalFund: null as string | null, // TODO: legal defense fund URL
     rally: null as string | null, // TODO: rally / event details URL
     shop: null as string | null, // TODO: Bonfire campaign or store URL (Shop page shows a placeholder until set)
-    email: 'weare@geo.partners',
+    email: 'weare@geodesic.pro',
   },
 };
 
