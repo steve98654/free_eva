@@ -24,6 +24,7 @@ export const site = {
     petition: null as string | null, // TODO: petition URL
     legalFund: null as string | null, // TODO: legal defense fund URL
     rally: null as string | null, // TODO: rally / event details URL
+    shop: null as string | null, // TODO: Bonfire campaign or store URL (Shop page shows a placeholder until set)
     email: 'weare@geo.partners',
   },
 };
@@ -33,4 +34,5 @@ export const tabs = [
   { href: '/free-eva/', label: 'Free Eva', zh: '釋放謝翌' },
   { href: '/mutual-respect/', label: 'Mutual Respect', zh: '相互尊重' },
   { href: '/us-china/', label: 'US–China', zh: '中美友誼' },
+  { href: '/shop/', label: 'Shop', zh: '義賣' },
 ];

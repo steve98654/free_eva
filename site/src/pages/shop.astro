@@ -1,0 +1,75 @@
+---
+import Base from '../layouts/Base.astro';
+import Placeholder from '../components/Placeholder.astro';
+import { site } from '../data/site';
+const { links } = site;
+---
+<Base title="Shop · Free Eva" description="Wear the Free Eva shirt. Every shirt is printed on demand, and proceeds support the campaign to bring Eva home.">
+  <section class="page-hero">
+    <div class="wrap">
+      <p class="zh-title" lang="zh-Hant">義賣 · 釋放謝翌</p>
+      <h1>Wear it.</h1>
+      <p class="lede">
+        The Free Eva shirt is how a crowd becomes a message. Order one for yourself, your lab or your whole
+        department. Shirts are printed and shipped by Bonfire, so there is no inventory to manage and the
+        campaign keeps the profit.
+      </p>
+      <div class="btn-row">
+        {links.shop
+          ? <a class="btn" href={links.shop} rel="noopener">Buy the shirt on Bonfire</a>
+          : <span class="btn disabled" aria-disabled="true">Shop opening soon</span>}
+        <a class="btn ghost" href="/free-eva/#graphics">Free graphics kit</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="product">
+        <img class="mock" src="/img/shop/shirt-mockup.webp" width="1120" height="600"
+          alt="Black Free Eva shirt. Front: 釋放謝翌 in white over FREE EVA in orange. Back: CHINA ⇄ US, 中美相互尊重, MUTUAL RESPECT, WE ARE EVA, URL:evaxie.us." />
+        <div class="product-info">
+          <p class="eyebrow">The rally shirt</p>
+          <h2>Free Eva / Mutual Respect</h2>
+          <p><strong>Front:</strong> <span class="zh" lang="zh-Hant">釋放謝翌</span> over <strong>FREE EVA</strong>.</p>
+          <p><strong>Back:</strong> CHINA ⇄ US, <span class="zh" lang="zh-Hant">中美相互尊重</span>, MUTUAL RESPECT, WE ARE EVA and the campaign site.</p>
+          <p class="muted">Black shirt, orange and white print. Sizes, styles and price are on the order page.</p>
+          {links.shop
+            ? <p><a class="btn" href={links.shop} rel="noopener">Order on Bonfire</a></p>
+            : <Placeholder label="Bonfire campaign link (set links.shop in src/data/site.ts)" />}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">How it works</p>
+      <h2>Where your money goes</h2>
+      <div class="grid grid-3">
+        <div class="card accent">
+          <h3>Printed on demand</h3>
+          <p class="muted">Bonfire prints each order and ships it to your door. The campaign never handles stock or shipping.</p>
+        </div>
+        <div class="card accent">
+          <h3>Proceeds</h3>
+          <Placeholder label="Who receives the profit (campaign, legal fund or a named nonprofit) and how it is used." />
+        </div>
+        <div class="card accent">
+          <h3>Make your own</h3>
+          <p class="muted">Printing locally for a rally or a lab? The <a href="/free-eva/#graphics">graphics kit</a> has the logo, and the shirt's print files are free to download below.</p>
+          <p class="dl"><a href="/downloads/shirt-print-front.png" download>Front print file</a> <a href="/downloads/shirt-print-back.png" download>Back print file</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .product { display: grid; gap: 2rem; align-items: center; grid-template-columns: 1fr; }
+  .mock { width: 100%; height: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 1rem; }
+  .product-info h2 { margin-top: 0; }
+  @media (min-width: 960px) { .product { grid-template-columns: 1.4fr 1fr; } }
+  .btn.disabled { opacity: 0.55; cursor: default; pointer-events: none; }
+  .dl { display: flex; gap: 1rem; flex-wrap: wrap; font-weight: 700; }
+</style>
