@@ -33,7 +33,7 @@ export const site = {
     petition: '/petition/' as string | null,
     legalFund: null as string | null, // TODO: legal defense fund URL
     rally: null as string | null, // TODO: rally / event details URL
-    shop: null as string | null, // TODO: Bonfire campaign or store URL (Shop page shows a placeholder until set)
+    shop: 'https://www.bonfire.com/free-eva/' as string | null, // Bonfire campaign (public buyer page)
     email: 'weare@geo.partners',
   },
 };
