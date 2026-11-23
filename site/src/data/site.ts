@@ -24,8 +24,8 @@ export const site = {
     goal: 1000,
     // TODO: set the delivery date once confirmed, e.g. 'December 10, 2026'. While null the page says
     // the date will be announced.
-    deliveryDate: null as string | null,
-    deliveryDateZh: null as string | null, // e.g. '2026年12月10日'
+    deliveryDate: 'February 22, 2027' as string | null,
+    deliveryDateZh: '2027年2月22日' as string | null,
   },
 
   // Links the campaign has not published yet. Leave as null until real.
@@ -34,7 +34,7 @@ export const site = {
     legalFund: null as string | null, // TODO: legal defense fund URL
     rally: null as string | null, // TODO: rally / event details URL
     shop: null as string | null, // TODO: Bonfire campaign or store URL (Shop page shows a placeholder until set)
-    email: 'weare@geodesic.pro',
+    email: 'weare@geo.partners',
   },
 };
 

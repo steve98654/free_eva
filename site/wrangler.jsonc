@@ -21,7 +21,7 @@
   "vars": {
     "SITE_URL": "https://evaxie.us",
     "EMAIL_FROM": "Free Eva <petition@evaxie.us>",
-    "EMAIL_REPLY_TO": "weare@geodesic.pro"
+    "EMAIL_REPLY_TO": "weare@geo.partners"
     // TURNSTILE_SITE_KEY is set in the Cloudflare dashboard (Worker > Settings > Variables, type Text).
     // keep_vars below stops deploys from removing it.
   },

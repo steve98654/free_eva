@@ -13,7 +13,7 @@ npm run build    # static output in site/dist/
 
 ## Before launch
 - **Placeholders**: unconfirmed details about Eva's case render in a dashed orange "TO CONFIRM" box. Find them all with `grep -rn "<Placeholder" src`. Only fill them with confirmed, public facts.
-- **Links**: petition, legal fund and rally links live in `src/data/site.ts` (`links`). While a link is `null`, the page shows a placeholder instead. Contact email is `weare@geodesic.pro`.
+- **Links**: petition, legal fund and rally links live in `src/data/site.ts` (`links`). While a link is `null`, the page shows a placeholder instead. Contact email is `weare@geo.partners`.
 - **Logo**: not chosen yet. The header shows a text placeholder. To swap, put the file in `public/img/` and set `site.logo.src` in `src/data/site.ts`.
 - **Social image**: `public/img/og-image.png` (hero 3, "We are Eva").
 
