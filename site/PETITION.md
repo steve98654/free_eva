@@ -45,7 +45,7 @@ The signature still counts and stays in the database and sheet; only the public 
 4. Optional: add **Secret** `IP_SALT` with any long random string.
 
 Emails come from `EMAIL_FROM` (`Free Eva <petition@evaxie.us>`) with replies going to
-`EMAIL_REPLY_TO` (`weare@geodesic.pro`); change them in `wrangler.jsonc` > `vars`.
+`EMAIL_REPLY_TO` (`weare@geo.partners`); change them in `wrangler.jsonc` > `vars`.
 
 ## 4. Daily Google Sheet of signers
 `google-sheet/petition-sync.gs` is a Google Apps Script that pulls every signer from

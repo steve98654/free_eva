@@ -12,7 +12,7 @@
 //   DB                    D1 database (required for signing)
 //   SITE_URL              e.g. https://evaxie.us
 //   EMAIL_FROM            e.g. "Free Eva <petition@evaxie.us>" (must be a verified Resend domain)
-//   EMAIL_REPLY_TO        e.g. weare@geodesic.pro
+//   EMAIL_REPLY_TO        e.g. weare@geo.partners
 //   TURNSTILE_SITE_KEY    public Turnstile key (optional; spam check is skipped if unset)
 //   TURNSTILE_SECRET_KEY  secret  (wrangler secret / dashboard "Secret")
 //   RESEND_API_KEY        secret  (if unset, signatures still save but no email is sent)
@@ -328,7 +328,7 @@ async function sendConfirmation(
   const visibility = s.isPublic
     ? `Your name${s.city ? ' and city' : ''} will appear on the public list of signers at ${siteUrl}/petition/.`
     : 'You chose to keep your signature private. It counts toward the total, but your name will not be shown.';
-  const replyTo = env.EMAIL_REPLY_TO || 'weare@geodesic.pro';
+  const replyTo = env.EMAIL_REPLY_TO || 'weare@geo.partners';
 
   const text = [
     `Dear ${s.name},`,
