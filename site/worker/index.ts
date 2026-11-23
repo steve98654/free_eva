@@ -141,7 +141,7 @@ export default {
 // ---------- GET /api/petition ----------
 
 async function getPetition(url: URL, env: Env): Promise<Response> {
-  const base = { turnstileSiteKey: env.TURNSTILE_SITE_KEY || null };
+  const base = { turnstileSiteKey: cleanKey(env.TURNSTILE_SITE_KEY) || null };
   if (!env.DB) return json({ ...base, ready: false, count: 0, signers: [], nextCursor: null });
 
   const cursor = Number(url.searchParams.get('cursor')) || 0;
@@ -198,8 +198,9 @@ async function sign(request: Request, env: Env, ctx: ExecutionContext): Promise<
   if (!truthy(body.agree)) return json({ error: 'Please tick the box to confirm you agree with the petition.', field: 'agree' }, 400);
 
   const ip = request.headers.get('cf-connecting-ip') || '';
-  if (env.TURNSTILE_SECRET_KEY) {
-    const ok = await verifyTurnstile(env.TURNSTILE_SECRET_KEY, String(body.turnstileToken || ''), ip);
+  const turnstileSecret = cleanKey(env.TURNSTILE_SECRET_KEY);
+  if (turnstileSecret) {
+    const ok = await verifyTurnstile(turnstileSecret, String(body.turnstileToken || ''), ip);
     if (!ok) return json({ error: 'We could not confirm you are human. Please reload the page and try again.' }, 400);
   }
 
@@ -417,6 +418,11 @@ function clean(v: unknown, max: number): string {
   if (typeof v !== 'string') return '';
   // Drop control characters and collapse whitespace.
   return v.replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max);
+}
+
+// Dashboard values are often pasted with spaces, line breaks or quotes; Turnstile rejects those.
+function cleanKey(v: string | undefined): string {
+  return (v || '').trim().replace(/^["']+|["']+$/g, '').trim();
 }
 
 function cleanMultiline(v: unknown, max: number): string {
