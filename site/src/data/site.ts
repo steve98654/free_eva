@@ -31,7 +31,6 @@ export const site = {
   // Links the campaign has not published yet. Leave as null until real.
   links: {
     petition: '/petition/' as string | null,
-    legalFund: null as string | null, // TODO: legal defense fund URL
     rally: null as string | null, // TODO: rally / event details URL
     shop: 'https://www.bonfire.com/free-eva/' as string | null, // Bonfire campaign (public buyer page)
     email: 'weare@geo.partners',
