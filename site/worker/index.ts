@@ -47,7 +47,7 @@ interface D1Database {
 }
 interface ExecutionContext { waitUntil(p: Promise<unknown>): void }
 
-const PAGE_SIZE = 50;
+const MAX_PUBLIC_LIST = 10000;
 const MAX_PER_IP_PER_HOUR = 5;
 
 const AFFILIATIONS: Record<string, string> = {
@@ -140,29 +140,30 @@ export default {
 
 // ---------- GET /api/petition ----------
 
-async function getPetition(url: URL, env: Env): Promise<Response> {
+async function getPetition(_url: URL, env: Env): Promise<Response> {
   const base = { turnstileSiteKey: cleanKey(env.TURNSTILE_SITE_KEY) || null };
   if (!env.DB) return json({ ...base, ready: false, count: 0, signers: [], nextCursor: null });
 
-  const cursor = Number(url.searchParams.get('cursor')) || 0;
   const countRow = await env.DB.prepare('SELECT COUNT(*) AS n FROM signatures').first<{ n: number }>();
+  // Every public signer with their place in the overall signing order (#1 = first to sign).
+  // Private signers also take a number, so public numbers can skip.
   const rows = await env.DB.prepare(
-    `SELECT id, name, city, state, signed_at FROM signatures
-     WHERE is_public = 1 AND hidden = 0 ${cursor ? 'AND id < ?1' : ''}
-     ORDER BY id DESC LIMIT ${PAGE_SIZE + 1}`,
-  )
-    .bind(...(cursor ? [cursor] : []))
-    .all<{ id: number; name: string; city: string | null; state: string | null; signed_at: string }>();
+    `SELECT num, name, city, state, signed_at FROM (
+       SELECT name, city, state, signed_at, is_public, hidden,
+              ROW_NUMBER() OVER (ORDER BY signed_at, id) AS num
+       FROM signatures
+     ) WHERE is_public = 1 AND hidden = 0
+     ORDER BY num LIMIT ${MAX_PUBLIC_LIST}`,
+  ).all<{ num: number; name: string; city: string | null; state: string | null; signed_at: string }>();
 
-  const list = rows.results.slice(0, PAGE_SIZE);
   return json(
     {
       ...base,
       ready: true,
       count: countRow?.n ?? 0,
-      // Only public signers, and only name, city and time. Never email.
-      signers: list.map((r) => ({ name: r.name, city: r.city, state: r.state, signedAt: r.signed_at })),
-      nextCursor: rows.results.length > PAGE_SIZE ? list[list.length - 1].id : null,
+      // Only public signers, and only number, name, place and time. Never email.
+      signers: rows.results.map((r) => ({ num: r.num, name: r.name, city: r.city, state: r.state, signedAt: r.signed_at })),
+      nextCursor: null,
     },
     200,
     { 'cache-control': 'public, max-age=15' },
@@ -240,7 +241,8 @@ async function sign(request: Request, env: Env, ctx: ExecutionContext): Promise<
   if (emailing) ctx.waitUntil(sendConfirmation(env, { name, email, city, isPublic, signedAt, token }));
 
   const countRow = await env.DB.prepare('SELECT COUNT(*) AS n FROM signatures').first<{ n: number }>();
-  return json({ ok: true, signedAt, count: countRow?.n ?? null, emailQueued: emailing });
+  const numRow = await env.DB.prepare('SELECT COUNT(*) AS n FROM signatures WHERE signed_at <= ?1').bind(signedAt).first<{ n: number }>();
+  return json({ ok: true, signedAt, number: numRow?.n ?? null, count: countRow?.n ?? null, emailQueued: emailing });
 }
 
 // ---------- POST /api/petition/remove ----------
