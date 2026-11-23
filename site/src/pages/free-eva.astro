@@ -17,6 +17,52 @@ const graphics = [
   { file: 'mark', title: 'Emblem only', note: 'The yin-yang and thirteen stars', dark: false },
   { file: 'mono-black', title: 'One-color black', note: 'For photocopies, stamps and stencils', dark: false },
 ];
+
+// Verified 2026-11-23 from senate.gov, house.gov and nj.gov.
+const officials = [
+  {
+    name: "Sen. Cory Booker",
+    role: "U.S. Senate, New Jersey",
+    phones: [
+      { label: "Washington, D.C.", tel: "(202) 224-3224" },
+      { label: "Newark", tel: "(973) 639-8700" },
+      { label: "Camden", tel: "(856) 338-8922" },
+    ],
+    form: "https://www.booker.senate.gov/contact/write-to-cory",
+    formLabel: "Write to Sen. Booker",
+  },
+  {
+    name: "Sen. Andy Kim",
+    role: "U.S. Senate, New Jersey",
+    phones: [
+      { label: "Washington, D.C.", tel: "(202) 224-4744" },
+      { label: "Barrington", tel: "(856) 757-5353" },
+      { label: "Jersey City", tel: "(201) 377-0900" },
+    ],
+    form: "https://www.kim.senate.gov/contact/",
+    formLabel: "Write to Sen. Kim",
+  },
+  {
+    name: "Rep. Bonnie Watson Coleman",
+    role: "U.S. House, NJ-12 (Princeton)",
+    phones: [
+      { label: "Washington, D.C.", tel: "(202) 225-5801" },
+      { label: "Ewing", tel: "(609) 883-0026" },
+    ],
+    form: "https://watsoncoleman.house.gov/contact",
+    formLabel: "Write to Rep. Watson Coleman",
+    note: "Representative-elect Adam Hamawy takes this seat on January 3, 2027.",
+  },
+  {
+    name: "Gov. Mikie Sherrill",
+    role: "Office of the Governor of New Jersey",
+    phones: [
+      { label: "Trenton", tel: "(609) 292-6000" },
+    ],
+    form: "https://www-njlib.nj.gov/GOV_TRANS_APPLICANTS/BTCustomServlet",
+    formLabel: "Write to the Governor",
+  },
+];
 ---
 <Base title="Free Eva" description="Eva Xie, a Princeton PhD student, was detained by ICE on returning from a conference. Help bring her home.">
   <section class="page-hero">
@@ -95,19 +141,32 @@ const graphics = [
         <li>
           <h3>Call your members of Congress</h3>
           <p>The U.S. Capitol switchboard at <a href="tel:+12022243121">(202) 224-3121</a> connects you to any senator or representative. Ask them to contact ICE on Eva's behalf and request her release. Be brief and polite: who you are, where you live, what you ask.</p>
-          <Placeholder label="Congressional offices covering Princeton, NJ to prioritize, plus a short call script." />
+          <div class="officials">
+            {officials.map((o) => (
+              <div class="official card">
+                <h4>{o.name}</h4>
+                <p class="muted role">{o.role}</p>
+                <ul>
+                  {o.phones.map((ph) => (
+                    <li><span class="where">{ph.label}</span> <a href={`tel:+1${ph.tel.replace(/\D/g, "")}`}>{ph.tel}</a></li>
+                  ))}
+                </ul>
+                <p class="write"><a href={o.form} rel="noopener">{o.formLabel}</a></p>
+                {o.note && <p class="muted note">{o.note}</p>}
+              </div>
+            ))}
+          </div>
+          <div class="script">
+            <p class="eyebrow">Suggested call script</p>
+            <p>"Hello, my name is <em>[your name]</em> and I live in <em>[town], New Jersey</em>. I'm calling about Eva Xie, a Princeton PhD student detained by ICE. I'm asking the <em>[Senator / Representative / Governor]</em> to contact ICE on her behalf, ask for her release, and make sure she has prompt access to her lawyer and her family. I also support ICE doing its job with respect for the public it serves. Thank you."</p>
+            <p class="muted">Not a New Jerseyan? Use the switchboard above to reach your own members of Congress with the same message.</p>
+          </div>
         </li>
         <li>
           <h3>Sign the petition</h3>
           {links.petition
             ? <p><a href={links.petition}>Sign and share the petition.</a></p>
             : <Placeholder label="Petition link (set links.petition in src/data/site.ts)" />}
-        </li>
-        <li>
-          <h3>Support her legal defense</h3>
-          {links.legalFund
-            ? <p><a href={links.legalFund}>Contribute to Eva's legal fund.</a></p>
-            : <Placeholder label="Legal fund link (set links.legalFund)" />}
         </li>
         <li>
           <h3>Show up</h3>
@@ -178,4 +237,15 @@ const graphics = [
   .thumb.light { background: #fff; }
   .thumb img { max-width: 100%; max-height: 100%; object-fit: contain; }
   .dl { margin-top: auto; display: flex; gap: 1rem; font-weight: 700; }
+  .officials { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); margin: 1.25rem 0; }
+  .official h4 { margin: 0; font-size: 1.05rem; }
+  .official .role { margin: 0.15rem 0 0.6rem; font-size: 0.9rem; }
+  .official ul { list-style: none; padding: 0; margin: 0 0 0.6rem; display: grid; gap: 0.25rem; }
+  .official li { display: grid; grid-template-columns: 7.5rem auto; align-items: baseline; }
+  .official .where { font-size: 0.88rem; opacity: 0.8; }
+  .official ul a { white-space: nowrap; }
+  .official .write { margin: 0; font-weight: 700; }
+  .official .note { margin: 0.5rem 0 0; font-size: 0.85rem; }
+  .script { border-left: 3px solid var(--orange); padding: 0.25rem 0 0.25rem 1rem; margin-top: 1rem; }
+  .script p { margin: 0.4rem 0; }
 </style>
