@@ -410,7 +410,8 @@ const shares = [
   const rowsEl = $<HTMLTableSectionElement>('signer-rows');
   const searchEl = $<HTMLInputElement>('signer-search');
   const moreBtn = $<HTMLButtonElement>('more-btn');
-  const ROWS_STEP = 100;
+  const ROWS_STEP = 1000;
+  const VISIBLE_ROWS = 9;
   let allSigners: Signer[] = [];
   let shownLimit = ROWS_STEP;
   // Default: signing order, #1 first.
@@ -526,6 +527,7 @@ const shares = [
       return tr;
     }));
     moreBtn.hidden = filtered.length <= shownLimit;
+    fitTableHeight();
     $('signers-empty').hidden = allSigners.length > 0;
     const status = $('signer-status');
     status.textContent = q
@@ -536,6 +538,21 @@ const shares = [
       th.setAttribute('aria-sort', b.dataset.sort === sortKey ? (sortDir === 1 ? 'ascending' : 'descending') : 'none');
     });
   }
+
+  // Show about VISIBLE_ROWS rows; the rest scroll inside the table box (header stays put).
+  function fitTableHeight() {
+    const wrap = document.querySelector<HTMLElement>('.table-wrap');
+    const table = wrap?.querySelector('table');
+    if (!wrap || !table) return;
+    const rows = Array.from(rowsEl.rows);
+    if (rows.length <= VISIBLE_ROWS) { wrap.style.maxHeight = ''; return; }
+    const head = table.tHead?.getBoundingClientRect().height ?? 0;
+    const body = rows.slice(0, VISIBLE_ROWS).reduce((h, r) => h + r.getBoundingClientRect().height, 0);
+    // Half of the next row peeks out so it is obvious the list scrolls.
+    const peek = rows[VISIBLE_ROWS].getBoundingClientRect().height / 2;
+    wrap.style.maxHeight = `${Math.ceil(head + body + peek)}px`;
+  }
+  window.addEventListener('resize', () => fitTableHeight());
 
   document.querySelectorAll<HTMLButtonElement>('[data-sort]').forEach((b) =>
     b.addEventListener('click', () => {
@@ -772,9 +789,18 @@ const shares = [
     border-radius: 4px; padding: 0.6rem 0.8rem;
   }
   .table-tools input[type='search']:focus { outline: 2px solid var(--orange); outline-offset: 1px; border-color: var(--orange); }
-  .table-wrap { overflow-x: auto; }
+  .table-wrap {
+    overflow: auto; overscroll-behavior: contain; border-bottom: 1px solid var(--line);
+    scrollbar-color: var(--orange) var(--panel);
+  }
+  .table-wrap::-webkit-scrollbar { width: 10px; height: 10px; }
+  .table-wrap::-webkit-scrollbar-track { background: var(--panel); }
+  .table-wrap::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 999px; }
   .signer-table { width: 100%; border-collapse: collapse; font-size: 0.98rem; }
-  .signer-table th { text-align: left; border-bottom: 2px solid var(--orange); padding: 0; white-space: nowrap; }
+  .signer-table th {
+    text-align: left; border-bottom: 2px solid var(--orange); padding: 0; white-space: nowrap;
+    position: sticky; top: 0; z-index: 1; background: var(--black);
+  }
   .signer-table th button {
     font: inherit; font-weight: 700; color: var(--white); background: none; border: 0; cursor: pointer;
     padding: 0.55rem 0.6rem 0.55rem 0; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.8rem;
