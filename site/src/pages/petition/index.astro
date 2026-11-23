@@ -519,7 +519,18 @@ const shares = [
     s.async = true;
     s.onload = () => {
       // @ts-ignore turnstile is a global from the script above
-      turnstileWidget = window.turnstile.render('#turnstile-box', { sitekey: siteKey, theme: 'dark', language: lang === 'zh' ? 'zh-tw' : 'auto' });
+      turnstileWidget = window.turnstile.render('#turnstile-box', {
+        sitekey: siteKey,
+        theme: 'dark',
+        language: lang === 'zh' ? 'zh-tw' : 'auto',
+        'error-callback': (code: string) => {
+          console.error('Turnstile error', code);
+          showError(lang === 'zh'
+            ? `人機驗證無法載入（錯誤 ${code}）。請稍後再試，或寫信給我們。`
+            : `The spam check could not load (error ${code}). Please try again later or email us to sign.`);
+          return true;
+        },
+      });
     };
     document.head.append(s);
   }
