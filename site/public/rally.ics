@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//evaxie.us//Free Eva//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:free-eva-rally-20261123@evaxie.us
+DTSTAMP:20261123T012500Z
+DTSTART:20261123T213000Z
+DTEND:20261123T230000Z
+SUMMARY:Free Eva rally
+LOCATION:Fountain of Freedom\, Scudder Plaza\, Robertson Hall\, Princeton University
+DESCRIPTION:Peaceful\, respectful rally for Eva Xie. More at https://evaxie.us/free-eva/
+URL:https://evaxie.us/free-eva/
+END:VEVENT
+END:VCALENDAR

@@ -28,6 +28,18 @@ export const site = {
     deliveryDateZh: '2027年2月22日' as string | null,
   },
 
+  // Next rally, shown on the Free Eva page's "Show up" step with calendar and directions links.
+  // Set to null to go back to the placeholder. Times are UTC (4:30 PM ET = 21:30Z in November).
+  // public/rally.ics holds the same details for Apple Calendar and Outlook; update both together.
+  rally: {
+    when: 'Monday, November 23, 2026, 4:30 PM ET',
+    place: 'Fountain of Freedom, Scudder Plaza, Robertson Hall, Princeton University',
+    startUtc: '20261123T213000Z',
+    endUtc: '20261123T230000Z',
+    ics: '/rally.ics',
+    maps: 'https://www.google.com/maps/search/?api=1&query=Fountain+of+Freedom+Robertson+Hall+Princeton+NJ',
+  } as null | { when: string; place: string; startUtc: string; endUtc: string; ics: string; maps: string },
+
   // Links the campaign has not published yet. Leave as null until real.
   links: {
     petition: '/petition/' as string | null,
