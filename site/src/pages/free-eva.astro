@@ -2,7 +2,16 @@
 import Base from '../layouts/Base.astro';
 import Placeholder from '../components/Placeholder.astro';
 import { site } from '../data/site';
-const { links } = site;
+const { links, rally } = site;
+const gcal = rally
+  ? 'https://calendar.google.com/calendar/render?' + new URLSearchParams({
+      action: 'TEMPLATE',
+      text: 'Free Eva rally',
+      dates: `${rally.startUtc}/${rally.endUtc}`,
+      details: 'Peaceful, respectful rally for Eva Xie. More at https://evaxie.us/free-eva/',
+      location: rally.place,
+    }).toString()
+  : null;
 const graphics = [
   { file: 'social-avatar', title: 'Profile picture', note: 'Square, for any social account', dark: true },
   { file: 'social-share-card', title: 'Share image', note: '1200×630 link preview and post image', dark: true },
@@ -171,7 +180,17 @@ const officials = [
         <li>
           <h3>Show up</h3>
           <p>Come to a rally, <a href={site.links.shop ?? "/shop/"} rel="noopener">wear the shirt</a>, and keep it peaceful and respectful. Our message is stronger when the way we say it matches what we are asking for.</p>
-          {links.rally
+          {rally ? (
+            <div class="rally">
+              <p style="margin-top: 0.7rem;"><strong>{rally.when}</strong><br />{rally.place}</p>
+              <p class="rally-links">
+                <a class="btn" href={gcal} target="_blank" rel="noopener">Add to Google Calendar</a>
+                <a class="btn" href={rally.ics} download="free-eva-rally.ics">Apple / Outlook (.ics)</a>
+                <a class="btn" href={rally.maps} target="_blank" rel="noopener">Directions</a>
+              </p>
+              {links.rally && <p><a href={links.rally}>Event details.</a></p>}
+            </div>
+          ) : links.rally
             ? <p><a href={links.rally}>Event details.</a></p>
             : <Placeholder label="Rally date, time and place (set links.rally)" />}
         </li>
@@ -248,4 +267,5 @@ const officials = [
   .official .note { margin: 0.5rem 0 0; font-size: 0.85rem; }
   .script { border-left: 3px solid var(--orange); padding: 0.25rem 0 0.25rem 1rem; margin-top: 1rem; }
   .script p { margin: 0.4rem 0; }
+  .rally-links { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem !important; }
 </style>
