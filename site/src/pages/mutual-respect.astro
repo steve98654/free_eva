@@ -68,6 +68,27 @@ import Base from '../layouts/Base.astro';
     </div>
   </section>
 
+  <section id="brief">
+    <div class="wrap brief">
+      <a class="brief-thumb" href="/downloads/free-eva-congress-brief.pdf">
+        <img src="/downloads/thumbs/congress-brief.webp" alt="One page policy brief: Enforce the law. Respect the guest." width="320" height="414" loading="lazy" />
+      </a>
+      <div>
+        <p class="eyebrow">For lawmakers and staff</p>
+        <h2>The one page brief</h2>
+        <p>
+          A single page for members of Congress and their staff: Eva&#8217;s situation, why this is common ground for
+          both parties, the six standards above, and three practical asks. Prepared for the bipartisan Problem Solvers
+          Caucus. Print it on US Letter paper; the QR code links to the petition.
+        </p>
+        <div class="btn-row">
+          <a class="btn" href="/downloads/free-eva-congress-brief.pdf" download>Download the brief (PDF)</a>
+          <a class="btn ghost" href="/downloads/free-eva-congress-brief.png" download>Image (PNG)</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section>
     <div class="narrow">
       <p class="eyebrow">Take action</p>
@@ -93,3 +114,11 @@ import Base from '../layouts/Base.astro';
     </div>
   </section>
 </Base>
+
+<style>
+  .brief { display: grid; grid-template-columns: minmax(180px, 300px) 1fr; gap: 2.5rem; align-items: center; }
+  .brief-thumb { display: block; border-radius: 6px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(0,0,0,0.45); transition: transform 0.15s; }
+  .brief-thumb:hover { transform: translateY(-3px); }
+  .brief-thumb img { display: block; width: 100%; height: auto; }
+  @media (max-width: 640px) { .brief { grid-template-columns: 1fr; gap: 1.5rem; } .brief-thumb { max-width: 260px; } }
+</style>
